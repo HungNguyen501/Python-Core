@@ -1,18 +1,6 @@
-plain_text = "HELLO"
-cipher_text = "BYFFI"
+import pandas as pd
 
-for k in range(1, 26):
-    s = "".join([(chr((ord(c) - 97 + k)%26 + 97)) for c in plain_text.lower()])
-    if s == cipher_text.lower():
-        print(f"Key: {k}")
-        break
+path = "D:\\Projects\\Python\\data\\data\\"
 
-plain_text = "GOODLUCK"
-cipher_text = ""
-k = 7
-
-for i in plain_text.lower():
-    cipher_text += chr((ord(i) - 96 + k) % 26 + 96)
-    #print(ord(i))
-
-print(cipher_text.upper())
+pd.read_parquet(path+"new.parquet").to_csv(path+"new.csv", index=False,encoding='utf-8-sig')
+pd.read_parquet(path+"old.parquet").to_csv(path+"old.csv",index=False,encoding='utf-8-sig')
