@@ -1,6 +1,6 @@
 import pandas as pd
 
-path = "D:\\Projects\\Python\\data\\data\\"
+path = "D:\\Downloads\\"
 
-pd.read_parquet(path+"new.parquet").to_csv(path+"new.csv", index=False,encoding='utf-8-sig')
-pd.read_parquet(path+"old.parquet").to_csv(path+"old.csv",index=False,encoding='utf-8-sig')
+pd.read_parquet(path+"temp1.parquet").to_csv(path+"temp1.csv", index=False,encoding='utf-8-sig')
+pd.read_parquet(path+"temp2.parquet").to_csv(path+"temp2.csv",index=False,encoding='utf-8-sig')
