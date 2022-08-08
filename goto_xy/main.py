@@ -6,10 +6,10 @@ hOut = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
 empty_line = "\t\t\t\t\t\t\t\t"
 
 class COORD(ctypes.Structure):
-	 _fields_ = [("X", ctypes.c_short), ("Y", ctypes.c_short)] 
-	 def __init__(self,x,y):
-		 self.X = x
-		 self.Y = y
+	_fields_ = [("X", ctypes.c_short), ("Y", ctypes.c_short)] 
+	def __init__(self,x,y):
+		self.X = x
+		self.Y = y
 
 def goto_xy(x=0, y=0):
     INIT_POS=COORD(y,x)
