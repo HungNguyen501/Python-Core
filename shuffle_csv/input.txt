@@ -1,0 +1,7 @@
+name|age
+hung|18
+nam|21
+hoa|25
+hung|18
+nam|21
+hoa|25
