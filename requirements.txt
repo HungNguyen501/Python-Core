@@ -1,0 +1,8 @@
+aiofiles
+flake8
+numpy
+pandas
+pytest
+pytest-asyncio
+seaborn
+tabulate

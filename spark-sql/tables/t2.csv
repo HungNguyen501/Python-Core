@@ -1,6 +1,0 @@
-id,time,temperature,humidity,led,json_field
-1,11/09/21,24,41,1,"{""name"":""Yin"", ""address"":{""city"":""Columbus"",""state"":""Ohio""}}"
-2,25/07/21,23,41,0,"{""name"":""Hoang"", ""address"":{""city"":""Hanoi"",""state"":""Long Bien""}}"
-3,25/07/21,22,41,1,"{""name"":""Yin"", ""address"":{""city"":""Columbus"",""state"":""Ohio""}}"
-4,25/07/21,21,41,0,"{""name"":""Yin"", ""address"":{""city"":""Columbus"",""state"":""Ohio""}}"
-5,25/07/21,20,41,0,"{""name"":""Yin"", ""address"":{""city"":""Columbus"",""state"":""Ohio""}}"
