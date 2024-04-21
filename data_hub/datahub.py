@@ -59,18 +59,18 @@ def search_datasets(graph: DataHubGraph, search_pattern: str) -> Generator[dict,
         yield results["searchResults"]
 
 
-def extract_dataset_info(list_datasets: List[dict]) -> List[dict]:
+def extract_dataset_info(li_datasets: List[dict]) -> List[dict]:
     """Filter datasets and extract info from them
 
     Args:
-        list_datasets(list): list of input datasets
+        li_datasets(list): list of input datasets
 
     Returns list of datasets
     """
     results = []
     dbs = set()
-    for i in list_datasets:
-        entity = i["entity"]
+    for dataset in li_datasets:
+        entity = dataset["entity"]
         if entity.get("properties"):
             if entity["properties"].get("customProperties"):
                 properties = {p["key"]: p["value"]
@@ -117,7 +117,7 @@ async def verify_entity(entity: dict, li_invalids: List[str], semaphore_config: 
         return
     hdfs_path = "hdfs://zalopaynewcluster/" + entity["location"]
     async with semaphore_config:
-        if await check_hdfs_path_exists(hdfs_path=hdfs_path) is False:
+        if await check_hdfs_path_exists(path=hdfs_path) is False:
             print(f"path doesnot exist [{hdfs_path}]: {entity['urn']}")
             li_invalids.append(entity["urn"])
 
@@ -197,19 +197,18 @@ def fetch_schema(graph: DataHubGraph, urn: str) -> dict:
 
 
 if __name__ == "__main__":
-    gms_endpoint = "http://10.60.37.10:8079"
     dh_graph = DataHubGraph(
         config=DatahubClientConfig(
             server="http://10.60.37.10:8079",
         )
     )
-    li_datasets = []
-    li_invalid_urns = []
+    list_datasets = []
+    list_invalid_urns = []
     for i in search_datasets(graph=dh_graph, search_pattern="urn:li:dataPlatform:hdfs,zalopay.encrypt"):
-        li_datasets.extend(i)
-    hdfs_datasets = extract_dataset_info(list_datasets=li_datasets)
+        list_datasets.extend(i)
+    hdfs_datasets = extract_dataset_info(li_datasets=list_datasets)
     asyncio.run(main=get_list_invalid_hdfs_datasets(
-        li_datasets=li_datasets,
-        li_invalids=li_invalid_urns,
+        li_datasets=list_datasets,
+        li_invalids=list_invalid_urns,
     ))
-    remove_datasets(graph=dh_graph, li_urns=li_invalid_urns)
+    remove_datasets(graph=dh_graph, li_urns=list_invalid_urns)
