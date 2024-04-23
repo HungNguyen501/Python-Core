@@ -1,8 +1,11 @@
 aiofiles
+asynctest
 flake8
 numpy
 pandas
+pylint
 pytest
 pytest-asyncio
+pytest-cov
 seaborn
 tabulate
