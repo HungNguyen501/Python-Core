@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 check_pep8 () {
     echo "Check convention..."
-    python3 -m flake8 && python3 -m pylint unittest_async hdfs_tree_paths data_hub
+    python3 -m flake8 . --count --show-source --statistics && python3 -m pylint unittest_async hdfs_tree_paths data_hub
 }
 run_unit_tests () {
     echo "Run unit tests..."
@@ -10,7 +10,6 @@ run_unit_tests () {
 if [ -z "${1}" ]; then
     check_pep8
     run_unit_tests
-    exit 0
 fi
 JOB_NAME=${1}
 if [ ${JOB_NAME} == "PEP8" ]; then
@@ -21,4 +20,3 @@ else
     echo "Type wrong job name (PEP8 or TEST), please retry."
     exit 1
 fi
-exit 0
