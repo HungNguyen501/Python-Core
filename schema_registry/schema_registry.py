@@ -69,6 +69,3 @@ class SchemaRegistry:
         resp = requests.delete(
             url=f"{self.host}/subjects/{subject}/versions/{version_id}?permanent={is_permanent}",)
         resp.raise_for_status()
-
-        aaa=1
-
