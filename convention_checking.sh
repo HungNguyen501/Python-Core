@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 check_pep8 () {
     echo "Check convention..."
-    python3 -m flake8 . --count --show-source --statistics && python3 -m pylint unittest_async hdfs_tree_paths data_hub
+    python3 -m flake8 . --show-source --statistics && python3 -m pylint unittest_async hdfs_tree_paths data_hub
 }
 run_unit_tests () {
     echo "Run unit tests..."
