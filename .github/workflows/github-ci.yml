@@ -28,10 +28,11 @@ jobs:
     - name: List files in the repository
       run: |
         cd ${{ github.workspace }}
+        pwd
         ls -lah ./
     - name: Check PEP8
-      run: |
+      run:
         bash convention_checking.sh PEP8
     - name: Run Unit tests
-      run: |
+      run:
         bash convention_checking.sh TEST
