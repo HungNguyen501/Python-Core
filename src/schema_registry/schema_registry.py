@@ -4,6 +4,7 @@ import requests
 
 
 class SchemaRegistry:
+    """SchemaRegistry Model"""
     def __init__(self):
         """Init Schema Registry"""
         self.host = "https://pdp-schema-registry.zalopay.vn/api/schema-registry"
@@ -16,7 +17,8 @@ class SchemaRegistry:
         """List all names of subjects"""
         resp = requests.get(
             url=f"{self.host}/subjects",
-            headers=self.headers,)
+            headers=self.headers,
+            timeout=10,)
         resp.raise_for_status()
         return sorted(resp.json())
 
@@ -30,7 +32,8 @@ class SchemaRegistry:
         """
         resp = requests.get(
             url=f"{self.host}/subjects/{subject}/versions",
-            headers=self.headers,)
+            headers=self.headers,
+            timeout=10,)
         resp.raise_for_status()
         return resp.json()
 
@@ -46,7 +49,8 @@ class SchemaRegistry:
         version_id = "latest" if version_id == -1 else version_id
         resp = requests.get(
             url=f"{self.host}/subjects/{subject}/versions/{version_id}",
-            headers=self.headers,)
+            headers=self.headers,
+            timeout=10,)
         resp.raise_for_status()
         return resp.json()
 
@@ -57,7 +61,8 @@ class SchemaRegistry:
         is_permenant(boolean): hard-delete if true else soft-delete
         """
         resp = requests.delete(
-            url=f"{self.host}/subjects/{subject}?permanent={is_permanent}",)
+            url=f"{self.host}/subjects/{subject}?permanent={is_permanent}",
+            timeout=10,)
         resp.raise_for_status()
 
     def delete_subject_version(self, subject: str, version_id: int, is_permanent: str = "false"):
@@ -67,5 +72,6 @@ class SchemaRegistry:
         is_permenant(boolean): hard-delete if true else soft-delete
         """
         resp = requests.delete(
-            url=f"{self.host}/subjects/{subject}/versions/{version_id}?permanent={is_permanent}",)
+            url=f"{self.host}/subjects/{subject}/versions/{version_id}?permanent={is_permanent}",
+            timeout=10,)
         resp.raise_for_status()

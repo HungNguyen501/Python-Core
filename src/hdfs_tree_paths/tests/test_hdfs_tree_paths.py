@@ -2,7 +2,7 @@
 from unittest.mock import patch, Mock, call
 
 import pytest
-from hdfs_tree_paths.hdfs_tree_paths import HdfsTreePaths
+from src.hdfs_tree_paths.hdfs_tree_paths import HdfsTreePaths
 
 
 @pytest.fixture(name="mock_hdfs_tree_paths", scope="session")
@@ -11,7 +11,7 @@ def gen_hdfs_tree_paths():
     yield HdfsTreePaths()
 
 
-@patch("hdfs_tree_paths.hdfs_tree_paths.logging.warning")
+@patch("src.hdfs_tree_paths.hdfs_tree_paths.logging.warning")
 def test_append_file_path_with_invalid_paths(mock_logging: Mock, mock_hdfs_tree_paths: HdfsTreePaths):
     """Test function append_file_path with invalid paths as input"""
     mock_hdfs_tree_paths.append_file_path(file_path="")

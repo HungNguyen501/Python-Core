@@ -2,11 +2,11 @@
 from unittest.mock import patch, mock_open, call, MagicMock, AsyncMock
 
 import pytest
-from unittest_async.main import fetch_event, write_outputs, main
+from src.unittest_async.main import fetch_event, write_outputs, main
 
 
 @pytest.mark.asyncio
-@patch("unittest_async.main.asyncio.sleep")
+@patch("src.unittest_async.main.asyncio.sleep")
 @patch(
     "builtins.open",
     new_callable=mock_open,
@@ -21,8 +21,8 @@ async def test_fetch_event(*_):
 
 
 @pytest.mark.asyncio
-@patch("unittest_async.main.fetch_event", return_value={'data': 'dummy'})
-@patch("unittest_async.main.aiofiles.open")
+@patch("src.unittest_async.main.fetch_event", return_value={'data': 'dummy'})
+@patch("src.unittest_async.main.aiofiles.open")
 async def test_write_outputs(mock_aiofiles, *_):
     """Test function write_outputs"""
     mock_sem = AsyncMock()
@@ -37,9 +37,9 @@ async def test_write_outputs(mock_aiofiles, *_):
 
 
 @pytest.mark.asyncio
-@patch("unittest_async.main.write_outputs")
-@patch("unittest_async.main.asyncio.gather", side_effect=AsyncMock())
-@patch("unittest_async.main.subprocess.run")
+@patch("src.unittest_async.main.write_outputs")
+@patch("src.unittest_async.main.asyncio.gather", side_effect=AsyncMock())
+@patch("src.unittest_async.main.subprocess.run")
 async def test_main(mock_subprocess_run, mock_asyncio_gather, *_):
     """Test main function"""
     await main(

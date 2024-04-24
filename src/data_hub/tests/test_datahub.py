@@ -2,7 +2,7 @@
 from unittest.mock import patch, AsyncMock, MagicMock, call
 
 import pytest
-from data_hub.datahub import (
+from src.data_hub.datahub import (
     search_datasets,
     extract_dataset_info,
     check_hdfs_path_exists,
@@ -13,7 +13,7 @@ from data_hub.datahub import (
 )
 
 
-@patch("data_hub.datahub.DataHubGraph")
+@patch("src.data_hub.datahub.DataHubGraph")
 def test_search_datasets(*_):
     """Test search_datasets function"""
     mock_graph = MagicMock()
@@ -48,7 +48,7 @@ def test_extract_dataset_info():
 
 
 @pytest.mark.asyncio
-@patch("data_hub.datahub.asyncio.create_subprocess_shell", side_effect=AsyncMock())
+@patch("src.data_hub.datahub.asyncio.create_subprocess_shell", side_effect=AsyncMock())
 async def test_check_hdfs_path_exists(mock_create_subprocess_shell):
     """Test check_hdfs_path_exists function"""
     _ = await check_hdfs_path_exists(path="/animal/cat/")
@@ -58,7 +58,7 @@ async def test_check_hdfs_path_exists(mock_create_subprocess_shell):
 
 
 @pytest.mark.asyncio
-@patch("data_hub.datahub.check_hdfs_path_exists", side_effect=[True, False])
+@patch("src.data_hub.datahub.check_hdfs_path_exists", side_effect=[True, False])
 async def test_verify_entity(*_):
     """Test verify_entity function"""
     mock_semaphore_config = AsyncMock()
@@ -72,9 +72,9 @@ async def test_verify_entity(*_):
 
 
 @pytest.mark.asyncio
-@patch("data_hub.datahub.verify_entity")
-@patch("data_hub.datahub.asyncio.gather", side_effect=AsyncMock())
-@patch("data_hub.datahub.asyncio.Semaphore")
+@patch("src.data_hub.datahub.verify_entity")
+@patch("src.data_hub.datahub.asyncio.gather", side_effect=AsyncMock())
+@patch("src.data_hub.datahub.asyncio.Semaphore")
 async def test_get_list_invalid_hdfs_datasets(mock_semaphore, mock_gather, *_):
     """Test get_list_invalid_hdfs_datasets function"""
     await get_list_invalid_hdfs_datasets([-1, -1], [])
