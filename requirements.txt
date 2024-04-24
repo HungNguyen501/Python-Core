@@ -1,8 +1,13 @@
+acryl-datahub~=0.10.5.1
 aiofiles
+aiohttp~=3.8.6
+asynctest
 flake8
 numpy
 pandas
+pylint
 pytest
 pytest-asyncio
+pytest-cov
 seaborn
 tabulate
