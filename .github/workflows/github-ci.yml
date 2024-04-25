@@ -18,7 +18,11 @@ jobs:
     - uses: actions/checkout@v3
     - name: Validate ref_name
       run:
-        bash convention_checking.sh REF
+        ref_type=${{ github.ref_type }}
+        ref_name=${{ github.ref_name }}
+        echo ${ref_type}
+        echo ${ref_name}
+        bash convention_checking.sh REF ${ref_type} ${ref_name}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
