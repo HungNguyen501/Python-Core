@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 validate_ref_name () {
-    ref_type=${{ github.ref_type }}
-    ref_name=${{ github.ref_name }}
+    ref_type=${2}
+    ref_name=${3}
     if [ "${ref_type}" == "tag" ] ||
         { 
             [ "${ref_type}" == "branch" ] && 
