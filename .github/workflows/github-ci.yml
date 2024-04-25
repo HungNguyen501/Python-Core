@@ -17,7 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Validate ref_name
-      bash convention_checking.sh REF
+      run:
+        bash convention_checking.sh REF
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
