@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Validate ref_name
+      bash convention_checking.sh REF
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
@@ -30,9 +32,10 @@ jobs:
         cd ${{ github.workspace }}
         pwd
         ls -lah ./
-    - name: Check PEP8
+    - name: Convention checking
       run: |
+        python3 src/git_python/git_ci.py -f skip_convention_checking
+        # Check PEP8
         bash convention_checking.sh PEP8
-    - name: Run Unit tests
-      run: |
+        # Run unit tests
         bash convention_checking.sh TEST
