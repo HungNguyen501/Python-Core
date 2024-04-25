@@ -28,10 +28,10 @@ def test_skip_convention_checking(mock_exit):
         "fool1/dum.md\nfool2/dum.py",
     ]
     # Case: return exit 1 to skip convention checking
-    skip_convention_checking(repo=mock_repo,)
+    skip_convention_checking(repo=mock_repo, commit_hash="xyz")
     assert mock_exit.mock_calls == [call(1)]
     # Case: return exit 0 to continue pipelinse
-    skip_convention_checking(repo=mock_repo,)
+    skip_convention_checking(repo=mock_repo, commit_hash="xyz")
     assert mock_exit.mock_calls == [call(1), call(0), call(1)]
 
 
@@ -40,5 +40,5 @@ def test_skip_convention_checking(mock_exit):
 def test_main(mock_repo, *_):
     """Test main function"""
     runner = CliRunner()
-    runner.invoke(main, ["-f", "skip_convention_checking"])
+    runner.invoke(main, ["-f", "skip_convention_checking", "-c", "xyz"])
     assert mock_repo.mock_calls == [call(path='./')]
