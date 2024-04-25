@@ -27,11 +27,14 @@ def test_skip_convention_checking(mock_exit):
         "fool1/dum.md\nfool2/dum.ipynb",
         "fool1/dum.md\nfool2/dum.py",
     ]
+    mock_commit = MagicMock()
+    mock_commit.__next__.side_effect = ["abc", "xyz", "abc", "xyz",]
+    mock_repo.iter_commits = MagicMock(return_value=mock_commit)
     # Case: return exit 1 to skip convention checking
-    skip_convention_checking(repo=mock_repo, commit_hash="xyz")
+    skip_convention_checking(repo=mock_repo,)
     assert mock_exit.mock_calls == [call(1)]
     # Case: return exit 0 to continue pipelinse
-    skip_convention_checking(repo=mock_repo, commit_hash="xyz")
+    skip_convention_checking(repo=mock_repo,)
     assert mock_exit.mock_calls == [call(1), call(0), call(1)]
 
 
@@ -40,5 +43,5 @@ def test_skip_convention_checking(mock_exit):
 def test_main(mock_repo, *_):
     """Test main function"""
     runner = CliRunner()
-    runner.invoke(main, ["-f", "skip_convention_checking", "-c", "xyz"])
+    runner.invoke(main, ["-f", "skip_convention_checking",])
     assert mock_repo.mock_calls == [call(path='./')]

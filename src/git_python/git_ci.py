@@ -19,7 +19,7 @@ def get_changed_files_of_commit(repo: Repo, back_head_to: int) -> List[Dict]:
     return list(list_commits[back_head_to].stats.files.keys())
 
 
-def skip_convention_checking(repo: Repo, commit_hash: str):
+def skip_convention_checking(repo: Repo,):
     """Verify changed files of last commit to determine skip
     to check convention or not.
     If all changed files is in list of ignore pattern then exit program with success code
@@ -29,7 +29,10 @@ def skip_convention_checking(repo: Repo, commit_hash: str):
         repo(Repo): GitHub repo Object
         commit_hash(str): commit SHA value or HEAD~1..HEAD
     """
-    changed_files = repo.git.diff(commit_hash, name_only=True).splitlines()
+    commits = repo.iter_commits()
+    last_commit = str(next(commits))
+    old_commit = str(next(commits))
+    changed_files = repo.git.diff(old_commit, last_commit, name_only=True).splitlines()
     list_ignored_files = [".md", ".ipynb",]
     for file in changed_files:
         if not any(ig in file for ig in list_ignored_files):
@@ -46,19 +49,13 @@ def skip_convention_checking(repo: Repo, commit_hash: str):
     default=None,
     help='Choose a function in git-ci'
 )
-@click.option(
-    '-c', '--commitsha',
-    type=str,
-    default=None,
-    help='Commit SHA'
-)
-def main(function, commitsha):
+def main(function):
     """Run main program"""
     repo = Repo(path="./")
     list_functions = {
         "skip_convention_checking": skip_convention_checking,
     }
-    list_functions[function](repo=repo, commit_hash=commitsha)
+    list_functions[function](repo=repo,)
 
 
 if __name__ == "__main__":

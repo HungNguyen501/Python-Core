@@ -37,7 +37,7 @@ jobs:
       run: |
         git branch -l
         git log | head -n 5
-        python3 src/git_python/git_ci.py -f skip_convention_checking -c ${{ github.sha }}
+        python3 src/git_python/git_ci.py -f skip_convention_checking
         # Check PEP8
         bash convention_checking.sh PEP8
         # Run unit tests
