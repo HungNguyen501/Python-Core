@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Validate ref_name
-      run:
+      run: |
         ref_type="${{ github.ref_type }}"
         ref_name="${{ github.ref_name }}"
         echo ${ref_type}
@@ -39,6 +39,8 @@ jobs:
         ls -lah ./
     - name: Convention checking
       run: |
+        git branch -l
+        git log | head -n 5
         python3 src/git_python/git_ci.py -f skip_convention_checking
         # Check PEP8
         bash convention_checking.sh PEP8

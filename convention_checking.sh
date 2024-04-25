@@ -8,10 +8,10 @@ validate_ref_name () {
             [[ "${ref_name}" == "main"  || ${ref_name} == feature/* ]]
         };
     then
-        echo "branch name is qualified: ${ref_name}"
+        echo "Branch name is qualified: ${ref_name}"
         exit 0
     else
-        echo "branch name is invalid: ${ref_name}. It should be started with [feature/]"
+        echo "Branch name is invalid: ${ref_name}. It should be started with [feature/]"
         exit 1
     fi
 }
