@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 validate_ref_name () {
-    ref_type=${2}
-    ref_name=${3}
+    ref_type=${1}
+    ref_name=${2}
     if [ "${ref_type}" == "tag" ] ||
         { 
             [ "${ref_type}" == "branch" ] && 
@@ -31,7 +31,7 @@ elif [ ${1} == "PEP8" ]; then
 elif [ ${1} == "TEST" ]; then
     run_unit_tests
 elif [ ${1} == "REF" ]; then
-    validate_ref_name
+    validate_ref_name ${2} ${3}
 else
     echo "Type wrong job name (PEP8, TEST or REF), please retry."
     exit 1
