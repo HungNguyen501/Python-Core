@@ -16,23 +16,57 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Validate ref_name
+      run: |
+        bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
+    - name: Get changed files
+      id: changed-files
+      uses: jitterbit/get-changed-files@v1
+      with:
+        format: 'json'
+    - name: Skip convention checking
+      id: skip-convention-checking
+      run: |
+        readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
+        echo "List of changed files: ${changed_files}"
+        for file_name in ${changed_files[@]}; do
+          if [ ${file_name} != *".md"* ] &&
+            [ ${file_name} != *".ipynb"* ];
+          then
+            echo "Allow to check convention."
+            echo "run=1" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+        done
+        echo "Skip pipelines for convention checking."
+        echo "run=0" >> $GITHUB_OUTPUT
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        python3 --version
-        python3 -m pip install --upgrade pip
-        pip install -r ./requirements.txt
+        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
+        then
+          python3 --version
+          python3 -m pip install --upgrade pip
+          pip install -r ./requirements.txt
+        else
+          echo "Skipped"
+        fi
     - name: List files in the repository
       run: |
         cd ${{ github.workspace }}
         pwd
         ls -lah ./
-    - name: Check PEP8
+    - name: Convention checking
       run: |
-        bash convention_checking.sh PEP8
-    - name: Run Unit tests
-      run: |
-        bash convention_checking.sh TEST
+        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
+        then
+          # Check PEP8
+          bash convention_checking.sh PEP8
+          # Run unit tests
+          bash convention_checking.sh TEST
+        else
+          echo "Skipped"
+        fi

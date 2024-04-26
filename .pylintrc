@@ -2,3 +2,10 @@
 disable=W1203
 [FORMAT]
 max-line-length=120
+[TYPECHECK]
+signature-mutators=click.decorators.option,
+                   click.decorators.argument,
+                   click.decorators.version_option,
+                   click.decorators.help_option,
+                   click.decorators.pass_context,
+                   click.decorators.confirmation_option
