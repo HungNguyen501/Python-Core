@@ -24,17 +24,19 @@ jobs:
       uses: jitterbit/get-changed-files@v1
       with:
         format: 'json'
-    - run: |
+    - name: Skip convention checking
+      run: |
         readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
+        echo "List of changed files: ${changed_files}"
         for file_name in ${changed_files[@]}; do
           if [ ${file_name} != *".md"* ] &&
             [ ${file_name} != *".ipynb"* ];
           then
+            echo "Allow to check convention."
             exit 0
           fi
         done
-        echo "Skip pipelines for convention checking beacause it includes:"
-        echo ${changed_files}
+        echo "Skip pipelines for convention checking."
         exit 1
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
