@@ -1,7 +1,7 @@
 License
 ---
 
-Copyright (C) 2024 @HungNguyen501<br>
+Copyright (C) 2024 @github.com/HungNguyen501<br>
 All rights reserved.
 
 Python-Core
