@@ -20,11 +20,12 @@ jobs:
       run: |
         bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
     - name: Get changed files
+      id: changed-files
       uses: jitterbit/get-changed-files@v1
       with:
         format: 'json'
     - run: |
-        readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+        readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
         for file_name in ${changed_files[@]}; do
           if [ ${file_name} != *".md"* ] &&
             [ ${file_name} != *".ipynb"* ];
@@ -32,7 +33,8 @@ jobs:
             exit 0
           fi
         done
-        echo "Skip pipelines for convention checking beacause it includes:\n${changed_files}"
+        echo "Skip pipelines for convention checking beacause it includes:"
+        echo ${changed_files}
         exit 1
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
