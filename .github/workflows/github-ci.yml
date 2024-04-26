@@ -19,6 +19,15 @@ jobs:
     - name: Validate ref_name
       run: |
         bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
+    - id: files
+      uses: jitterbit/get-changed-files@v1
+      with:
+        format: 'json'
+    - run: |
+        readarray -t removed_files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+        for removed_file in ${removed_files[@]}; do
+          echo "Do something with this ${removed_file}."
+        done
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
