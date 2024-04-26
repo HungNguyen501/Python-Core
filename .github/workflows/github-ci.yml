@@ -25,6 +25,7 @@ jobs:
       with:
         format: 'json'
     - name: Skip convention checking
+      id: skip-convention-checking
       run: |
         readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
         echo "List of changed files: ${changed_files}"
@@ -33,20 +34,26 @@ jobs:
             [ ${file_name} != *".ipynb"* ];
           then
             echo "Allow to check convention."
-            exit 0
+            echo "{run}={1}" >> $GITHUB_OUTPUT
           fi
         done
         echo "Skip pipelines for convention checking."
-        exit 1
+        echo "{run}={0}" >> $GITHUB_OUTPUT
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        python3 --version
-        python3 -m pip install --upgrade pip
-        pip install -r ./requirements.txt
+        echo "run=${{ steps.skip-convention-checking.outputs.run }}"
+        if [ ${{ steps.skip-convention-checking.outputs.run }} == "1" ];
+        then
+          python3 --version
+          python3 -m pip install --upgrade pip
+          pip install -r ./requirements.txt
+        else
+          echo "Skipped"
+        fi
     - name: List files in the repository
       run: |
         cd ${{ github.workspace }}
@@ -54,7 +61,12 @@ jobs:
         ls -lah ./
     - name: Convention checking
       run: |
-        # Check PEP8
-        bash convention_checking.sh PEP8
-        # Run unit tests
-        bash convention_checking.sh TEST
+        if [ ${{ steps.skip-convention-checking.outputs.run }} == "1" ];
+        then
+          # Check PEP8
+          bash convention_checking.sh PEP8
+          # Run unit tests
+          bash convention_checking.sh TEST
+        else
+          echo "Skipped"
+        fi
