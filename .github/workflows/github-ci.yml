@@ -19,15 +19,21 @@ jobs:
     - name: Validate ref_name
       run: |
         bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
-    - id: files
+    - name: Get changed files
       uses: jitterbit/get-changed-files@v1
       with:
         format: 'json'
     - run: |
-        readarray -t removed_files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
-        for removed_file in ${removed_files[@]}; do
-          echo "Do something with this ${removed_file}."
+        readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+        for file_name in ${changed_files[@]}; do
+          if [ ${file_name} != *".md"* ] &&
+            [ ${file_name} != *".ipynb"* ];
+          then
+            exit 0
+          fi
         done
+        echo "Skip pipelines for convention checking beacause it includes:\n${changed_files}"
+        exit 1
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
@@ -44,8 +50,6 @@ jobs:
         ls -lah ./
     - name: Convention checking
       run: |
-        git diff --name-only ${{ github.event.after }} ${{ github.event.before }}
-        python3 src/git_python/git_ci.py -f skip_convention_checking -c ${{ github.sha }}
         # Check PEP8
         bash convention_checking.sh PEP8
         # Run unit tests
