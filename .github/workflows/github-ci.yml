@@ -35,6 +35,7 @@ jobs:
         ls -lah ./
     - name: Convention checking
       run: |
+        git diff --name-only ${{ github.event.after }} ${{ github.event.before }}
         python3 src/git_python/git_ci.py -f skip_convention_checking -c ${{ github.sha }}
         # Check PEP8
         bash convention_checking.sh PEP8
