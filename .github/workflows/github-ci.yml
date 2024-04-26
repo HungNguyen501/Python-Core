@@ -46,8 +46,7 @@ jobs:
         python-version: "3.11"
     - name: Install dependencies
       run: |
-        echo "run=${{ steps.skip-convention-checking.outputs.run }}"
-        if [ ${{ steps.skip-convention-checking.outputs.run }} == "1" ];
+        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
         then
           python3 --version
           python3 -m pip install --upgrade pip
@@ -62,7 +61,7 @@ jobs:
         ls -lah ./
     - name: Convention checking
       run: |
-        if [ ${{ steps.skip-convention-checking.outputs.run }} == "1" ];
+        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
         then
           # Check PEP8
           bash convention_checking.sh PEP8
