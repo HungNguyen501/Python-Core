@@ -21,7 +21,7 @@ jobs:
         bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
     - name: Get changed files
       id: changed-files
-      uses: jitterbit/get-changed-files@v1
+      uses: tj-actions/changed-files@v32
       with:
         format: 'json'
     - name: Skip convention checking
