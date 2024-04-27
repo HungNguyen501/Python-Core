@@ -27,7 +27,6 @@ jobs:
     - name: Skip convention checking
       id: skip-convention-checking
       run: |
-        echo ${{ steps.changed-files.outputs.all }}
         bash convention_checking.sh CHANGES_CHECKING ${{ steps.changed-files.outputs.all }}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
