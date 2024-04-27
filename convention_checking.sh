@@ -15,6 +15,20 @@ validate_ref_name () {
         exit 1
     fi
 }
+skip_convention_checking () {
+    IFS=',' read -r -a changed_files <<< "${1}"
+    for file_name in ${changed_files[@]}; do
+        if [ ${file_name} != *".md"* ] &&
+            [ ${file_name} != *".ipynb"* ];
+        then
+            echo "Allow to check convention."
+            echo "run=1" >> $GITHUB_OUTPUT
+            exit 0
+        fi
+    done
+    echo "Skip convention checking."
+    echo "run=0" >> $GITHUB_OUTPUT
+}
 check_pep8 () {
     echo "Check convention..."
     python3 -m flake8 . --show-source --statistics && python3 -m pylint src
@@ -32,6 +46,8 @@ elif [ ${1} == "TEST" ]; then
     run_unit_tests
 elif [ ${1} == "REF" ]; then
     validate_ref_name ${2} ${3}
+elif [ ${1} == "CHANGES_CHECKING" ]; then
+    skip_convention_checking ${2}
 else
     echo "Type wrong job name (PEP8, TEST or REF), please retry."
     exit 1
