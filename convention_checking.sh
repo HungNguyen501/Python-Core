@@ -18,8 +18,8 @@ validate_ref_name () {
 skip_convention_checking () {
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        if [ ${file_name} != *".md"* ] &&
-            [ ${file_name} != *".ipynb"* ];
+        if [[ ${file_name} != *".md"
+            && ${file_name} != *".ipynb" ]];
         then
             echo "Allow to check convention."
             echo "run=1" >> $GITHUB_OUTPUT
