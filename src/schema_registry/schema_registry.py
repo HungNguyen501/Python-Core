@@ -5,11 +5,16 @@ import requests
 
 class SchemaRegistry:
     """SchemaRegistry Model"""
-    def __init__(self):
-        """Init Schema Registry"""
-        self.host = "https://pdp-schema-registry.zalopay.vn/api/schema-registry"
+    def __init__(self, url: str, token: str):
+        """Init Schema Registry
+
+        Args:
+            url(str): url of schema registry api
+            token(str): token for schema registry authorization
+        """
+        self.host = url
         self.headers = {
-            "Authorization": "Basic YWRtaW46YWRtaW50aGlzYWRtaW50aGF0",
+            "Authorization": f"Basic {token}",
             "Accept": "application/vnd.schemaregistry.v1+json, application/vnd.schemaregistry+json, application/json",
         }
 

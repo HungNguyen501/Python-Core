@@ -199,7 +199,7 @@ def fetch_schema(graph: DataHubGraph, urn: str) -> dict:
 if __name__ == "__main__":
     dh_graph = DataHubGraph(
         config=DatahubClientConfig(
-            server="http://10.60.37.10:8079",
+            server="http://localhost:8079",
         )
     )
     list_datasets = []
