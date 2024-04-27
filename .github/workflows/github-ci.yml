@@ -23,23 +23,12 @@ jobs:
       id: changed-files
       uses: jitterbit/get-changed-files@v1
       with:
-        format: 'json'
+        format: 'csv'
     - name: Skip convention checking
       id: skip-convention-checking
       run: |
-        readarray -t changed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
-        echo "List of changed files: ${changed_files}"
-        for file_name in ${changed_files[@]}; do
-          if [ ${file_name} != *".md"* ] &&
-            [ ${file_name} != *".ipynb"* ];
-          then
-            echo "Allow to check convention."
-            echo "run=1" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-        done
-        echo "Skip pipelines for convention checking."
-        echo "run=0" >> $GITHUB_OUTPUT
+        echo ${{ steps.changed-files.outputs.all }}
+        bash convention_checking.sh CHANGES_CHECKING ${{ steps.changed-files.outputs.all }}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
