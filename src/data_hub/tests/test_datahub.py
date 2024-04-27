@@ -44,7 +44,7 @@ def test_extract_dataset_info():
     assert extract_dataset_info(li_datasets=test_sample1) == [
         {"database": "hdfs_cluster_61", "deprecation": None,
          "location": "fake_location", "urn": "fake_urn"}]
-    assert extract_dataset_info(li_datasets=test_sample2) == []  # Catch KeyError Exception
+    assert not extract_dataset_info(li_datasets=test_sample2)  # Catch KeyError Exception
 
 
 @pytest.mark.asyncio
