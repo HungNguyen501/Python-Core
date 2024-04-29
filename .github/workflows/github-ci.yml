@@ -19,6 +19,11 @@ jobs:
     - name: Validate ref_name
       run: |
         bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
+    - name: List files in the repository
+      run: |
+        cd ${{ github.workspace }}
+        pwd
+        ls -lah ./
     - name: Get changed files
       id: changed-files
       uses: jitterbit/get-changed-files@v1
@@ -42,11 +47,6 @@ jobs:
         else
           echo "Skipped"
         fi
-    - name: List files in the repository
-      run: |
-        cd ${{ github.workspace }}
-        pwd
-        ls -lah ./
     - name: Convention checking
       run: |
         if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
