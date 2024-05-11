@@ -1,3 +1,6 @@
+src/web_crawler/data/gold_prices/*.csv
+src/parquet_modular_encryption/data/*.parquet
+
 .idea/
 
 metastore_db
