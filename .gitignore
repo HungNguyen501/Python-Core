@@ -1,5 +1,5 @@
 src/web_crawler/data/gold_prices/*.csv
-src/pme/data/*.parquet
+src/parquet_modular_encryption/data/*.parquet
 
 .idea/
 
