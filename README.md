@@ -10,4 +10,4 @@ Python-Core
 The personal project is written mainly by Python. Also, the project uses GitHub Action for CI flow that qualifies following criteria:
 - Branch naming convention
 - PEP8
-- Unit Tests - Code covrage 100%
+- Unit Tests - Code coverage 100%
