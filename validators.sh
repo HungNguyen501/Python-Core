@@ -37,18 +37,5 @@ run_unit_tests () {
     echo "Run unit tests..."
     python3 -m pytest -vv --cov ./src --cov-report term-missing --cov-fail-under=100
 }
-if [ -z "${1}" ]; then
-    check_pep8
-    run_unit_tests
-elif [ ${1} == "PEP8" ]; then
-    check_pep8
-elif [ ${1} == "TEST" ]; then
-    run_unit_tests
-elif [ ${1} == "REF" ]; then
-    validate_ref_name ${2} ${3}
-elif [ ${1} == "CHANGES_CHECKING" ]; then
-    skip_convention_checking ${2}
-else
-    echo "Type wrong job name (PEP8, TEST or REF), please retry."
-    exit 1
-fi
+# Execute function
+$*
