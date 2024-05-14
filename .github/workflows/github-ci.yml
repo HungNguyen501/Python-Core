@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Validate ref_name
       run: |
-        bash convention_checking.sh REF ${{ github.ref_type }} ${{ github.ref_name }}
+        make check_ref_name REF_TYPE=${{ github.ref_type }} REF_NAME=${{ github.ref_name }}
     - name: List files in the repository
       run: |
         cd ${{ github.workspace }}
@@ -32,7 +32,7 @@ jobs:
     - name: Skip convention checking
       id: skip-convention-checking
       run: |
-        bash convention_checking.sh CHANGES_CHECKING ${{ steps.changed-files.outputs.all }}
+        make skip_checking CHANGES=${{ steps.changed-files.outputs.all }}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
@@ -41,9 +41,7 @@ jobs:
       run: |
         if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
         then
-          python3 --version
-          python3 -m pip install --upgrade pip
-          pip install -r ./requirements.txt
+          make install
         else
           echo "Skipped"
         fi
@@ -52,9 +50,9 @@ jobs:
         if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
         then
           # Check PEP8
-          bash convention_checking.sh PEP8
+          make pep8
           # Run unit tests
-          bash convention_checking.sh TEST
+          make test
         else
           echo "Skipped"
         fi
