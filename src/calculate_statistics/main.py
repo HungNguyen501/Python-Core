@@ -67,15 +67,15 @@ def handle_file_chunk(file_path: str, start: int, end: str):
                     break
                 temperature = float(buffer[index:new_line])
                 index = new_line + 1
-                if location not in result:
-                    result[location] = [temperature, temperature, temperature, 1]
-                else:
+                try:
                     if temperature < result[location][0]:
                         result[location][0] = temperature
                     elif temperature > result[location][1]:
                         result[location][1] = temperature
                     result[location][2] += temperature
                     result[location][3] += 1
+                except KeyError:
+                    result[location] = [temperature, temperature, temperature, 1]
                 location = None
     return result
 
