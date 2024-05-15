@@ -19,7 +19,7 @@ trigger_ci () {
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        file=("$(~/bin/bazel query --keep_going --noshow_progress "$file_name")")
+        file=("$(bazel query --keep_going --noshow_progress "$file_name")")
          if [[ ! -z $file ]]; then files+=${file}; fi
     done
     if [ ${#files[@]} -eq 0 ]; then

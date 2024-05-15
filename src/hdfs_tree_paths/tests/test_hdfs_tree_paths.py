@@ -27,7 +27,7 @@ def test_append_file_path_with_invalid_paths(mock_logging: Mock, mock_hdfs_tree_
         call('Path is invalid [%s]', 'hdfs://zalopaynewcluster/a??'),
         call('Path is invalid [%s]', 'hdfs://zalopaynewcluster/a|||b'),
     ]
-    assert False 
+    assert False
 
 
 def test_append_file_path(mock_hdfs_tree_paths: HdfsTreePaths):
