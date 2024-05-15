@@ -1,7 +1,9 @@
 """Test git_ci module"""
+import sys
 from unittest.mock import patch, call, MagicMock
 
 from click.testing import CliRunner
+import pytest
 from src.git_python.git_ci import (
     get_changed_files_of_commit,
     skip_convention_checking,
@@ -43,3 +45,7 @@ def test_main(mock_repo, *_):
     runner = CliRunner()
     runner.invoke(main, ["-f", "skip_convention_checking", "-c", "xyz",])
     assert mock_repo.mock_calls == [call(path='./')]
+
+
+if __name__ == "__main__":
+    sys.exit(pytest.main([__file__] + sys.argv[1:]))

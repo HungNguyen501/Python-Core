@@ -1,4 +1,5 @@
 """Unit tests for HdfsTreePaths module"""
+import sys
 from unittest.mock import patch, Mock, call
 
 import pytest
@@ -62,3 +63,7 @@ def test_list_all_leaf_node_paths(mock_hdfs_tree_paths: HdfsTreePaths):
         'hdfs://zalopaynewcluster/zalopay/ym=202403/ymd=20240302/event=e2/type=t2',
         'hdfs://zalopaynewcluster/zalopay/loyalty/20240302'
     }
+
+
+if __name__ == "__main__":
+    sys.exit(pytest.main([__file__] + sys.argv[1:]))

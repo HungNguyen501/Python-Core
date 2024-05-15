@@ -42,9 +42,10 @@
 # When running in Travis-CI, you can directly use the $TRAVIS_COMMIT_RANGE
 # environment variable.
 
-set -eu
+# set -eu
 
-MAIN_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD)
+# MAIN_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD)
+MAIN_BRANCH=feature/bazel
 
 COMMIT_RANGE=${COMMIT_RANGE:-$(git merge-base ${MAIN_BRANCH} HEAD)".."}
 
@@ -53,28 +54,35 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Get a list of the current files in package form by querying Bazel.
 files=()
-for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
-  files+=("$(bazel query "$file")")
-  bazel query "$file"
+# for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
+for file in $(git diff --name-only HEAD~5 HEAD ); do
+  echo "---------[${file}]-------------"
+#   files+=("$(~/bin/bazel query --keep_going --noshow_progress --output package "$file")")
+  files+=("$(~/bin/bazel query --keep_going --noshow_progress "$file")")
+#   ~/bin/bazel query --keep_going --noshow_progress "$file"
+#   echo "------${file}"
+#   ~/bin/bazel query --keep_going --noshow_progress --output package "$file"
 done
 
+echo "----${files[*]}------"
+
+
 # Query for the associated buildables
-# buildables=$(bazel query \
+# buildables=$(~/bin/bazel query \
 #     --keep_going \
 #     --noshow_progress \
 #     "kind(.*_binary, rdeps(//..., set(${files[*]})))")
 # # Run the tests if there were results
 # if [[ ! -z $buildables ]]; then
 #   echo "Building binaries"
-#   bazel build "$buildables"
+#   ~/bin/bazel build "$buildables"
 # fi
 
-# tests=$(bazel query \
-#     --keep_going \
-#     --noshow_progress \
-#     "kind(test, rdeps(//..., set(${files[*]}))) except attr('tags', 'manual', //...)")
-# # Run the tests if there were results
-# if [[ ! -z $tests ]]; then
-#   echo "Running tests"
-#   bazel test "$tests"
-# fi
+tests=$(~/bin/bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
+# Run the tests if there were results
+if [[ ! -z $tests ]]; then
+  echo "Running tests"
+  ~/bin/bazel test --test_output=all $tests
+  ~/bin/bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
+  echo ${tests}
+fi
