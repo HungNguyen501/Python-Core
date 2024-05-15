@@ -7,15 +7,10 @@ py_library(
 py_test(
     name = "test_hdfs_tree_paths",
     srcs = ["tests/test_hdfs_tree_paths.py"],
-    size = "small",
     args = [
         "-vv",
     ],
-    tags = [
-        "local",
-        "requires-network",
-        "yourit",
-    ],
+    timeout = "short",
     deps = [
         "//src/hdfs_tree_paths:hdfs_tree_paths"
     ],
