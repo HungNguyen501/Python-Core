@@ -21,41 +21,20 @@ jobs:
         make check_ref_name REF_TYPE=${{ github.ref_type }} REF_NAME=${{ github.ref_name }}
     - name: List files in the repository
       run: |
+        cd ${{ github.workspace }}
         pwd
         ls -lah ./
     - uses: bazelbuild/setup-bazelisk@v3
-    - name: Check bazel
-      run: |
-        bazel query "src/datahub/datahub.py"
     - name: Get changed files
       id: changed-files
       uses: jitterbit/get-changed-files@v1
       with:
         format: 'csv'
-    - name: Skip convention checking
-      id: skip-convention-checking
-      run: |
-        make skip_checking CHANGES=${{ steps.changed-files.outputs.all }}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
-    - name: Install dependencies
+    - name: Trigger CI
+      id: trigger-ci
       run: |
-        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
-        then
-          make install
-        else
-          echo "Skipped"
-        fi
-    - name: Convention checking
-      run: |
-        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
-        then
-          # Check PEP8
-          make pep8
-          # Run unit tests
-          make test
-        else
-          echo "Skipped"
-        fi
+        make trigger_ci CHANGES=${{ steps.changed-files.outputs.all }}

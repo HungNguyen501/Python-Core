@@ -15,19 +15,29 @@ validate_ref_name () {
         exit 1
     fi
 }
-skip_convention_checking () {
+trigger_ci () {
+    files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        if [[ ${file_name} != *".md"
-            && ${file_name} != *".ipynb" ]];
-        then
-            echo "Allow to check convention."
-            echo "run=1" >> $GITHUB_OUTPUT
-            exit 0
-        fi
+        files+=("$(bazel query --keep_going --noshow_progress "$file")")
     done
-    echo "Skip convention checking."
-    echo "run=0" >> $GITHUB_OUTPUT
+    if [ ${#files[@]} < 0 ];
+    then
+        echo "Skip convention checking."
+        exit 0
+    fi
+    # Check convention
+    modules=$(bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
+    if [[ ! -z $tests ]]; then
+        make install
+        echo "Check convention..."
+        python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
+    fi
+    # Run unit tests
+    tests=$(bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
+    if [[ ! -z $tests ]]; then
+        bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
+    fi
 }
 check_pep8 () {
     echo "Check convention..."

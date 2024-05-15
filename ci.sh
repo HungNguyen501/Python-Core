@@ -44,8 +44,8 @@
 
 # set -eu
 
-# MAIN_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD)
-MAIN_BRANCH=feature/bazel
+MAIN_BRANCH=$(git symbolic-ref --short refs/remotes/origin/HEAD)
+# MAIN_BRANCH=feature/bazel
 
 COMMIT_RANGE=${COMMIT_RANGE:-$(git merge-base ${MAIN_BRANCH} HEAD)".."}
 
@@ -54,8 +54,8 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Get a list of the current files in package form by querying Bazel.
 files=()
-# for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
-for file in $(git diff --name-only HEAD~5 HEAD ); do
+for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
+# for file in $(git diff --name-only HEAD~5 HEAD ); do
   echo "---------[${file}]-------------"
 #   files+=("$(~/bin/bazel query --keep_going --noshow_progress --output package "$file")")
   files+=("$(~/bin/bazel query --keep_going --noshow_progress "$file")")
@@ -78,11 +78,27 @@ echo "----${files[*]}------"
 #   ~/bin/bazel build "$buildables"
 # fi
 
-tests=$(~/bin/bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
-# Run the tests if there were results
-if [[ ! -z $tests ]]; then
-  echo "Running tests"
-  ~/bin/bazel test --test_output=all $tests
-  ~/bin/bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
-  echo ${tests}
+echo ${#files[@]}
+
+if [ ${#files[@]} > 0 ];
+then
+    echo "Skip convention checking."
+    # exit 0
+
 fi
+
+# tests=$(~/bin/bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
+echo ${files[*]}
+# tests=$(~/bin/bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
+modules=$(~/bin/bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
+python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
+# for module in ${modules[@]}; do
+#     make pep8 LOCATION=${module}
+# done
+# Run the tests if there were results
+# if [[ ! -z $tests ]]; then
+# #   echo "Running tests"
+# #   ~/bin/bazel test --test_output=all $tests
+#   ~/bin/bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
+#   echo ${tests}
+# fi
