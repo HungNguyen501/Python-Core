@@ -31,11 +31,11 @@ skip_convention_checking () {
 }
 check_pep8 () {
     echo "Check convention..."
-    python3 -m flake8 . --show-source --statistics && python3 -m pylint src
+    python3 -m flake8 ./src --show-source --statistics && python3 -m pylint ./src
 }
 run_unit_tests () {
     echo "Run unit tests..."
-    python3 -m pytest -vv --cov ./src --cov-report term-missing --cov-fail-under=100
+    python3 -m pytest ./src -vv --cov ./src --cov-report term-missing --cov-fail-under=100
 }
 # Execute function
 $*
