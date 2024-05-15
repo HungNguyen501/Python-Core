@@ -19,7 +19,7 @@ trigger_ci () {
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        files+=("$(bazel query --keep_going --noshow_progress "$file")")
+        files+=("$(~/bin/bazel query --keep_going --noshow_progress "$file_name")")
     done
     if [ ${#files[@]} < 0 ];
     then
@@ -27,16 +27,16 @@ trigger_ci () {
         exit 0
     fi
     # Check convention
-    modules=$(bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
-    if [[ ! -z $tests ]]; then
+    modules=$(~/bin/bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
+    if [[ ! -z $modules ]]; then
         make install
         echo "Check convention..."
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
     fi
     # Run unit tests
-    tests=$(bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
+    tests=$(~/bin/bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
     if [[ ! -z $tests ]]; then
-        bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
+        ~/bin/bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
     fi
 }
 check_pep8 () {
