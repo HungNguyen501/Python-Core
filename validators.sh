@@ -19,9 +19,10 @@ trigger_ci () {
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        files+=("$(bazel query --keep_going --noshow_progress "$file_name")")
+        file=("$(~/bin/bazel query --keep_going --noshow_progress "$file_name")")
+         if [[ ! -z $file ]]; then files+=${file}; fi
     done
-    if [ ${#files[@]} -eq 1 ]; then
+    if [ ${#files[@]} -eq 0 ]; then
         echo "Skip convention checking."
         exit 0
     fi
