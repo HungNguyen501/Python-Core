@@ -19,11 +19,11 @@ run_ci () {
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        file=("$(bazel query --keep_going --noshow_progress "$file_name") ")
+        files+=("$(bazel query --keep_going --noshow_progress "$file_name") ")
     done
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
     if [[ ! -z ${modules} ]]; then
-        make install
+        # make install
         echo "---Check convention...---"
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
         if [ $? != 0 ]; then
