@@ -20,25 +20,23 @@ run_ci () {
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
         file=("$(bazel query --keep_going --noshow_progress "$file_name") ")
-        if [[ ! -z $file ]]; then files+=${file}; fi
     done
-    if [ ${#files[@]} -eq 0 ]; then
-        echo "Skip convention checking."
-        exit 0
-    fi
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
     if [[ ! -z ${modules} ]]; then
         make install
-        echo " Check convention..."
+        echo "---Check convention...---"
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
         if [ $? != 0 ]; then
             exit 1
         fi
-        # Run unit tests
+        echo "---Run unittests...---"
         tests=$(bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
         if [[ ! -z $tests ]]; then
             bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
         fi
+    else
+        echo "---Skip convention checking---"
+        exit 0
     fi
 }
 check_pep8 () {
