@@ -54,8 +54,8 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Get a list of the current files in package form by querying Bazel.
 files=()
-for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
-# for file in $(git diff --name-only HEAD~5 HEAD ); do
+# for file in $(git diff --name-only "${COMMIT_RANGE}" ); do
+for file in $(git diff --name-only HEAD~1 HEAD ); do
   echo "---------[${file}]-------------"
 #   files+=("$(~/bin/bazel query --keep_going --noshow_progress --output package "$file")")
   files+=("$(~/bin/bazel query --keep_going --noshow_progress "$file")")
@@ -78,20 +78,12 @@ echo "----${files[*]}------"
 #   ~/bin/bazel build "$buildables"
 # fi
 
-echo ${#files[@]}
-
-if [ ${#files[@]} > 0 ];
-then
-    echo "Skip convention checking."
-    # exit 0
-
-fi
-
 # tests=$(~/bin/bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
 echo ${files[*]}
 # tests=$(~/bin/bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
 modules=$(~/bin/bazel query --keep_going --noshow_progress --output package "set(${files[*]})" )
-python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
+# python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
+make run_ci CHANGES=${modules}
 # for module in ${modules[@]}; do
 #     make pep8 LOCATION=${module}
 # done

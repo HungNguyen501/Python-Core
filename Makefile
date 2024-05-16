@@ -14,5 +14,5 @@ pep8:
 check_ref_name:
 	@bash ./validators.sh validate_ref_name $(REF_TYPE) $(REF_NAME)
 
-trigger_ci:
-	@bash ./validators.sh trigger_ci $(CHANGES)
+run_ci:
+	@bash ./validators.sh run_ci $(CHANGES)
