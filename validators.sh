@@ -23,7 +23,7 @@ run_ci () {
     done
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
     if [[ ! -z ${modules} ]]; then
-        # make install
+        make install
         echo "---Check convention...---"
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
         if [ $? != 0 ]; then
