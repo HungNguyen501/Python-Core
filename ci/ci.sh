@@ -25,14 +25,13 @@ run_ci () {
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
     if [[ ! -z ${modules} ]]; then
         make install
-        echo "Check convention..."
-        echo "${modules}"
+        printf "Check convention...\n${modules}\n"
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
         if [ $? != 0 ]; then
             exit 1
         fi
         tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))")
-        echo "Run unit tests..."
+        printf "Run unit tests...\n${tests}\n"
         if [[ ! -z $tests ]]; then
             for test in ${tests[@]}; do
                 python3 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
