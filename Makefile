@@ -18,3 +18,6 @@ check_ref_name:
 run_ci:
 	@bash ./$(CiScript) run_ci $(CHANGES)
 	@bazel clean --async
+
+build_pool_api:
+	@docker-compose up -d pool_api
