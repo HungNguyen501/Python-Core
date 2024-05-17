@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 validate_ref_name () {
     ref_type=${1}
     ref_name=${2}
@@ -40,7 +41,6 @@ run_ci () {
                 fi
             done
         fi
-        
     else
         echo "----------Skip convention checking----------"
         exit 0
