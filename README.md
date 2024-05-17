@@ -7,7 +7,7 @@ All rights reserved.
 Python-Core
 ---
 
-The personal project is written mainly by Python. Also, the project uses GitHub Action for CI flow that qualifies following criteria:
+The personal project is written mainly by Python. Also, the project uses **GitHub Action** and **Bazel (incremental build model)** for CI flow that qualifies the following criteria:
 - Branch naming convention
 - PEP8
 - Unit Tests - Code coverage 100%
