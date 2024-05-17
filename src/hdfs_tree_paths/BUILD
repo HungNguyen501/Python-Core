@@ -7,11 +7,11 @@ py_library(
 py_test(
     name = "test_hdfs_tree_paths",
     srcs = ["tests/test_hdfs_tree_paths.py"],
+    timeout = "short",
     args = [
         "-vv",
     ],
-    timeout = "short",
     deps = [
-        "//src/hdfs_tree_paths:hdfs_tree_paths"
+        "//src/hdfs_tree_paths:hdfs_tree_paths",
     ],
 )

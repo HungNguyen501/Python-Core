@@ -23,26 +23,32 @@ run_ci () {
     done
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
     if [[ ! -z ${modules} ]]; then
-        make install
-        echo "---Check convention...---"
+        # make install
+        echo "Check convention..."
+        echo "${modules}"
         python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
         if [ $? != 0 ]; then
             exit 1
         fi
-        echo "---Run unittests...---"
-        tests=$(bazel query --keep_going --noshow_progress "kind(test, rdeps(//..., set(${files[*]})))")
+        tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))")
+        echo "Run unit tests..."
         if [[ ! -z $tests ]]; then
-            bazel test --verbose_failures  --test_verbose_timeout_warnings --test_output=all $tests
+            for test in ${tests[@]}; do
+                python3 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
+                if [ $? != 0 ]; then
+                    exit 1
+                fi
+            done
         fi
+        
     else
-        echo "---Skip convention checking---"
+        echo "----------Skip convention checking----------"
         exit 0
     fi
 }
 check_pep8 () {
     echo "Check convention..."
     python3 -m flake8 ${1} --show-source --statistics && python3 -m pylint ${1}
-    echo "aaa"
 }
 run_unit_tests () {
     echo "Run unit tests..."

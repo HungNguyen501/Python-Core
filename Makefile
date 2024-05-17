@@ -16,3 +16,4 @@ check_ref_name:
 
 run_ci:
 	@bash ./validators.sh run_ci $(CHANGES)
+	@bazel clean --async

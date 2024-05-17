@@ -7,7 +7,7 @@ py_library(
 py_test(
     name = "test_git_ci",
     srcs = ["tests/test_git_ci.py"],
-    size = "small",
+    timeout = "short",
     args = [
         "-vv",
     ],
@@ -17,6 +17,6 @@ py_test(
         "yourit",
     ],
     deps = [
-        "//src/git_python:git_ci"
+        "//src/git_python:git_ci",
     ],
 )

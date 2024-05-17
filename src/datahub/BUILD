@@ -7,6 +7,7 @@ py_library(
 py_test(
     name = "test_datahub",
     srcs = ["tests/test_datahub.py"],
+    timeout = "short",
     args = [
         "-vv",
     ],
