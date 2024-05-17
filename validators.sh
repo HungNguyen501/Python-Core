@@ -15,27 +15,44 @@ validate_ref_name () {
         exit 1
     fi
 }
-skip_convention_checking () {
+run_ci () {
+    files=()
     IFS=',' read -r -a changed_files <<< "${1}"
     for file_name in ${changed_files[@]}; do
-        if [[ ${file_name} != *".md"
-            && ${file_name} != *".ipynb" ]];
-        then
-            echo "Allow to check convention."
-            echo "run=1" >> $GITHUB_OUTPUT
-            exit 0
-        fi
+        files+=("$(bazel query --keep_going --noshow_progress "$file_name") ")
     done
-    echo "Skip convention checking."
-    echo "run=0" >> $GITHUB_OUTPUT
+    modules=$(bazel query --noshow_progress --output package "set(${files[*]})" )
+    if [[ ! -z ${modules} ]]; then
+        make install
+        echo "Check convention..."
+        echo "${modules}"
+        python3 -m flake8 ${modules} --show-source --statistics && python3 -m pylint ${modules}
+        if [ $? != 0 ]; then
+            exit 1
+        fi
+        tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))")
+        echo "Run unit tests..."
+        if [[ ! -z $tests ]]; then
+            for test in ${tests[@]}; do
+                python3 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
+                if [ $? != 0 ]; then
+                    exit 1
+                fi
+            done
+        fi
+        
+    else
+        echo "----------Skip convention checking----------"
+        exit 0
+    fi
 }
 check_pep8 () {
     echo "Check convention..."
-    python3 -m flake8 . --show-source --statistics && python3 -m pylint src
+    python3 -m flake8 ${1} --show-source --statistics && python3 -m pylint ${1}
 }
 run_unit_tests () {
     echo "Run unit tests..."
-    python3 -m pytest -vv --cov ./src --cov-report term-missing --cov-fail-under=100
+    python3 -m pytest ${1} -vv --cov ${1} --cov-report term-missing --cov-fail-under=100
 }
 # Execute function
 $*

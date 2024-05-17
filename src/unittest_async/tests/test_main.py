@@ -1,4 +1,5 @@
 """Unit tests for main module"""
+import sys
 from unittest.mock import patch, mock_open, call, MagicMock, AsyncMock
 
 import pytest
@@ -48,3 +49,7 @@ async def test_main(mock_subprocess_run, mock_asyncio_gather, *_):
     )
     assert mock_subprocess_run.call_args == call(args=['rm', '-rf', 'zombie.dum'], check=True)
     assert len(mock_asyncio_gather.call_args.args) == 3
+
+
+if __name__ == "__main__":
+    sys.exit(pytest.main([__file__] + sys.argv[1:]))

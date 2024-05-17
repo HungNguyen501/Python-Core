@@ -6,7 +6,7 @@ import logging.config
 import os
 import time
 
-logging.config.fileConfig(fname="./setup.cfg")
+logging.config.fileConfig(fname="/Users/lap14443/Projects/Python-Core/setup.cfg")
 logger = logging.getLogger(__name__)
 
 

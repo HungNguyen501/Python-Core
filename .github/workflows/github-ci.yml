@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Validate ref_name
       run: |
         make check_ref_name REF_TYPE=${{ github.ref_type }} REF_NAME=${{ github.ref_name }}
@@ -24,35 +24,17 @@ jobs:
         cd ${{ github.workspace }}
         pwd
         ls -lah ./
+    - uses: bazelbuild/setup-bazelisk@v3
     - name: Get changed files
       id: changed-files
       uses: jitterbit/get-changed-files@v1
       with:
         format: 'csv'
-    - name: Skip convention checking
-      id: skip-convention-checking
-      run: |
-        make skip_checking CHANGES=${{ steps.changed-files.outputs.all }}
     - name: Set up Python 3.11
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
-    - name: Install dependencies
+    - name: Run CI
+      id: run-ci
       run: |
-        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
-        then
-          make install
-        else
-          echo "Skipped"
-        fi
-    - name: Convention checking
-      run: |
-        if [ "${{ steps.skip-convention-checking.outputs.run }}" == "1" ];
-        then
-          # Check PEP8
-          make pep8
-          # Run unit tests
-          make test
-        else
-          echo "Skipped"
-        fi
+        make run_ci CHANGES=${{ steps.changed-files.outputs.all }}

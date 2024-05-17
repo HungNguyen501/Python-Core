@@ -6,13 +6,14 @@ install:
 	@python3 -m pip install -r ./requirements.txt
 
 test:
-	@bash ./validators.sh run_unit_tests
+	@bash ./validators.sh run_unit_tests $(LOCATION)
 
 pep8:
-	@bash ./validators.sh check_pep8
+	@bash ./validators.sh check_pep8 $(LOCATION)
 
 check_ref_name:
 	@bash ./validators.sh validate_ref_name $(REF_TYPE) $(REF_NAME)
 
-skip_checking:
-	@bash ./validators.sh skip_convention_checking $(CHANGES)
+run_ci:
+	@bash ./validators.sh run_ci $(CHANGES)
+	@bazel clean --async
