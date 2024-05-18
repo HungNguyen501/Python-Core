@@ -8,4 +8,5 @@ numpy
 pandas
 pyarrow~=16.0.0
 seaborn
+sweetviz~=2.3.1
 tabulate

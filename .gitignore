@@ -1,3 +1,6 @@
+# Ignore sweetviz reports
+src/eda_sample/*.html
+
 # Ignore backup files.
 *~
 # Ignore Vim swap files.
