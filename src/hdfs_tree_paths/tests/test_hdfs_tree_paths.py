@@ -17,39 +17,39 @@ def test_append_file_path_with_invalid_paths(mock_logging: Mock, mock_hdfs_tree_
     """Test function append_file_path with invalid paths as input"""
     mock_hdfs_tree_paths.append_file_path(file_path="")
     mock_hdfs_tree_paths.append_file_path(file_path="dummy")
-    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://zalopay")
-    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://zalopaynewcluster/a??")
-    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://zalopaynewcluster/a|||b")
+    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://lake")
+    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://hdfs_cluster/a??")
+    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://hdfs_cluster/a|||b")
     assert mock_logging.call_args_list == [
         call('Path is invalid [%s]', ''),
         call('Path is invalid [%s]', 'dummy'),
-        call('Path is invalid [%s]', 'hdfs://zalopay'),
-        call('Path is invalid [%s]', 'hdfs://zalopaynewcluster/a??'),
-        call('Path is invalid [%s]', 'hdfs://zalopaynewcluster/a|||b'),
+        call('Path is invalid [%s]', 'hdfs://lake'),
+        call('Path is invalid [%s]', 'hdfs://hdfs_cluster/a??'),
+        call('Path is invalid [%s]', 'hdfs://hdfs_cluster/a|||b'),
     ]
 
 
 def test_append_file_path(mock_hdfs_tree_paths: HdfsTreePaths):
     """Test function append_file_path"""
-    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://zalopaynewcluster/zalopay/encrypt/202403/20240301")
+    mock_hdfs_tree_paths.append_file_path(file_path="hdfs://hdfs_cluster/lake/encrypt/202403/20240301")
     assert mock_hdfs_tree_paths.graph == {
-        ('zalopay', "b1f942a850e87810e809fdfa8229485d"): {('encrypt', "35c5706e5fc1ae51a2e84e2b81a1a910")},
-        ('encrypt', "35c5706e5fc1ae51a2e84e2b81a1a910"): {('202403', "df3652637a82fbd615164cb27ea9e1c0")},
-        ('202403', "df3652637a82fbd615164cb27ea9e1c0"): {('20240301', "46af4ef85b3180495915c6b62091d0eb")},
+        ('lake', '97d986e2afa2c72986972e6433fbeaf9'): {('encrypt', 'e63354f46dce52bcba42e3d21711afe8')},
+        ('encrypt', 'e63354f46dce52bcba42e3d21711afe8'): {('202403', 'eac68ba120e7ebcb528abefed8acbdc6')},
+        ('202403', 'eac68ba120e7ebcb528abefed8acbdc6'): {('20240301', '176c73a3622ba7c5a12c0bb486667698')}
     }
 
 
 def test_list_all_leaf_node_paths(mock_hdfs_tree_paths: HdfsTreePaths):
     """Test function list_all_leaf_node_paths"""
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/encrypt/")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/loyalty//20240302")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/encrypt/  /202403/20240301")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/encrypt/202403/20240302")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/encrypt/ym=202403/ymd=20240302")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/encrypt/ym=202403/ymd=20240302/event=e1")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/ym=202403/ymd=20240302/event=e2")
-    mock_hdfs_tree_paths.append_file_path("hdfs://zalopaynewcluster/zalopay/ym=202403/ymd=20240302/event=e2/type=t2")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/encrypt/")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/loyalty//20240302")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/encrypt/  /202403/20240301")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/encrypt/202403/20240302")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/encrypt/ym=202403/ymd=20240302")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/encrypt/ym=202403/ymd=20240302/event=e1")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/ym=202403/ymd=20240302/event=e2")
+    mock_hdfs_tree_paths.append_file_path("hdfs://hdfs_cluster/lake/ym=202403/ymd=20240302/event=e2/type=t2")
     mock_hdfs_tree_paths.append_file_path("ls: Permission denied: user=zdeploy")
     mock_hdfs_tree_paths.append_file_path("client_loop: send disconnect: Broken pipe")
     results = list(mock_hdfs_tree_paths.list_all_leaf_node_paths(
@@ -57,11 +57,11 @@ def test_list_all_leaf_node_paths(mock_hdfs_tree_paths: HdfsTreePaths):
     ))
     assert len(results) == 5
     assert set(results) == {
-        'hdfs://zalopaynewcluster/zalopay/encrypt/202403/20240301',
-        'hdfs://zalopaynewcluster/zalopay/encrypt/202403/20240302',
-        'hdfs://zalopaynewcluster/zalopay/encrypt/ym=202403/ymd=20240302/event=e1',
-        'hdfs://zalopaynewcluster/zalopay/ym=202403/ymd=20240302/event=e2/type=t2',
-        'hdfs://zalopaynewcluster/zalopay/loyalty/20240302'
+        'hdfs://hdfs_cluster/lake/encrypt/202403/20240301',
+        'hdfs://hdfs_cluster/lake/encrypt/202403/20240302',
+        'hdfs://hdfs_cluster/lake/encrypt/ym=202403/ymd=20240302/event=e1',
+        'hdfs://hdfs_cluster/lake/ym=202403/ymd=20240302/event=e2/type=t2',
+        'hdfs://hdfs_cluster/lake/loyalty/20240302'
     }
 
 

@@ -1,8 +1,6 @@
-###############################################################################################
-################################ PYTHON RULES LOADING #########################################
-###############################################################################################
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+workspace(name = "Python-Core")
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "rules_python",
     sha256 = "4912ced70dc1a2a8e4b86cec233b192ca053e82bc72d877b98e126156e8f228d",
