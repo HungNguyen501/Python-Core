@@ -54,7 +54,7 @@ async def test_check_hdfs_path_exists(mock_create_subprocess_shell):
     """Test check_hdfs_path_exists function"""
     _ = await check_hdfs_path_exists(path="/animal/cat/")
     assert mock_create_subprocess_shell.mock_calls == [
-        call('hdfs dfs -conf /home/hungnd8/hdfs_configs/zalopaynewcluster/hdfs-site.xml -test -d /animal/cat/')
+        call('hdfs dfs -conf /home/hungnd8/hdfs_configs/hdfs_cluster/hdfs-site.xml -test -d /animal/cat/')
     ]
 
 

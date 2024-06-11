@@ -9,11 +9,11 @@ class HdfsTreePaths:
     """Tree Paths for Hdfs files"""
     def __init__(self):
         """Initialize object"""
-        self.domain = "hdfs://zalopaynewcluster"
+        self.domain = "hdfs://hdfs_cluster"
         self.valid_path_pattern = re.compile(
-            r"^hdfs://zalopaynewcluster/zalopay/[a-zA-Z0-9\+\=\[\]\.\:\/()!~&#@%_\s-]*$"
+            r"^hdfs://hdfs_cluster/lake/[a-zA-Z0-9\+\=\[\]\.\:\/()!~&#@%_\s-]*$"
         )
-        self.root_node = ("zalopay", md5("zalopay".encode()).hexdigest())
+        self.root_node = ("lake", md5("lake".encode()).hexdigest())
         self.graph = {}
 
     def append_file_path(self, file_path: str):

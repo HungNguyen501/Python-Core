@@ -19,7 +19,7 @@ def search_datasets(graph: DataHubGraph, search_pattern: str) -> Generator[dict,
         search(
             input: {{
                 type: DATASET,
-                query: "urn:li:dataPlatform:hdfs,zalopay.",
+                query: "urn:li:dataPlatform:hdfs,lake.",
                 start: {start}, count: {count}
             }}
         )
@@ -97,7 +97,7 @@ async def check_hdfs_path_exists(path: str) -> bool:
         path(str): path for validation
     """
     process = await asyncio.create_subprocess_shell(
-        f"hdfs dfs -conf /home/hungnd8/hdfs_configs/zalopaynewcluster/hdfs-site.xml -test -d {path}",
+        f"hdfs dfs -conf /home/hungnd8/hdfs_configs/hdfs_cluster/hdfs-site.xml -test -d {path}",
     )
     await process.wait()
     return process.returncode == 0
@@ -115,7 +115,7 @@ async def verify_entity(entity: dict, li_invalids: List[str], semaphore_config: 
         print(f"deprecated: {entity['urn']}")
         li_invalids.append(entity["urn"])
         return
-    hdfs_path = "hdfs://zalopaynewcluster/" + entity["location"]
+    hdfs_path = "hdfs://lakenewcluster/" + entity["location"]
     async with semaphore_config:
         if await check_hdfs_path_exists(path=hdfs_path) is False:
             print(f"path doesnot exist [{hdfs_path}]: {entity['urn']}")
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     )
     list_datasets = []
     list_invalid_urns = []
-    for i in search_datasets(graph=dh_graph, search_pattern="urn:li:dataPlatform:hdfs,zalopay.encrypt"):
+    for i in search_datasets(graph=dh_graph, search_pattern="urn:li:dataPlatform:hdfs,lake.encrypt"):
         list_datasets.extend(i)
     hdfs_datasets = extract_dataset_info(li_datasets=list_datasets)
     asyncio.run(main=get_list_invalid_hdfs_datasets(
