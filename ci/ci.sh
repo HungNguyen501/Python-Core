@@ -22,13 +22,21 @@ validate_ref_name () {
     fi
 }
 run_all_tests () {
-    tests=$(bazel query --keep_going --noshow_progress --output package "kind(test, ... - //configurations/lib/...)" 2>/dev/null)
-    if [[ ! -z ${tests} ]];
-    then
+    modules=$(bazel query --noshow_progress --output package "..." 2>/dev/null)
+    if [[ ! -z ${modules} ]]; then
         make install
+        printf "${GREEN}Checking convention...\n"; \
+        printf '%.0s-' $(seq 1 50); \
+        printf "${NO_COLOR}\n";
+        printf "${modules}\n"
+        python3.11 -m flake8 ${modules} --show-source --statistics && python3.11 -m pylint ${modules}
+        if [ $? != 0 ]; then
+            exit 1
+        fi
+        tests=$(bazel query --keep_going --noshow_progress --output package "kind(test, ...)" 2>/dev/null)
         printf "${GREEN}Running all tests...\n"; \
         printf '%.0s-' $(seq 1 50); \
-        printf "\n${NO_COLOR}";
+        printf "${NO_COLOR}\n";
         for test in ${tests[@]}; do
             python3.11 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
             if [ $? != 0 ]; then

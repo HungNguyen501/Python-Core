@@ -5,7 +5,6 @@ install:
 	@python3.11 --version
 	@python3.11 -m pip install --upgrade pip
 	@python3.11 -m pip install -r ./ci/requirements.txt
-	@python3.11 -m pip install -r ./requirements.txt
 
 test:
 	@bash ./$(CiScript) run_unit_tests $(LOCATION)
