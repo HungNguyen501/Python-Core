@@ -4,4 +4,3 @@ pylint
 pytest
 pytest-asyncio
 pytest-cov
-typing-extensions~=4.8.0
