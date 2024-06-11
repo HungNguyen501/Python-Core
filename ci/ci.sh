@@ -38,7 +38,12 @@ run_all_tests () {
         printf '%.0s-' $(seq 1 50); \
         printf "${NO_COLOR}\n";
         for test in ${tests[@]}; do
-            python3.11 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
+            python3.11 -m pytest ${test} \
+                -vv \
+                --disable-warnings \
+                --cov ${test} \
+                --cov-report term-missing \
+                --cov-fail-under=100
             if [ $? != 0 ]; then
                 exit 1
             fi
@@ -76,7 +81,12 @@ run_ci () {
             printf '%.0s-' $(seq 1 50); \
             printf "${NO_COLOR}\n";
             for test in ${tests[@]}; do
-                python3.11 -m pytest ${test} -vv --cov ${test} --cov-report term-missing --cov-fail-under=100
+                python3.11 -m pytest ${test} \
+                    --disable-warnings \
+                    -vv \
+                    --cov ${test} \
+                    --cov-report term-missing \
+                    --cov-fail-under=100
                 if [ $? != 0 ]; then
                     exit 1
                 fi
