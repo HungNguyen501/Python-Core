@@ -42,7 +42,7 @@ jobs:
         pattern="^test-all-v.*"
         if [ "${{ github.ref_type }}" == "tag" ] && [[ "${{ github.ref_name }}" =~ ${pattern} ]];
         then
-          make test
+          make test_all
         else
           make run_ci CHANGES=${{ steps.changed-files.outputs.all }}
         fi
