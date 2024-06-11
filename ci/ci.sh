@@ -25,7 +25,7 @@ run_all_tests () {
     tests=$(bazel query --keep_going --noshow_progress --output package "kind(test, ... - //configurations/lib/...)" 2>/dev/null)
     if [[ ! -z ${tests} ]];
     then
-        # make install
+        make install
         printf "${GREEN}Running all tests...\n"; \
         printf '%.0s-' $(seq 1 50); \
         printf "\n${NO_COLOR}";
@@ -53,7 +53,7 @@ run_ci () {
     done
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" 2>/dev/null)
     if [[ ! -z ${modules} ]]; then
-        # make install
+        make install
         printf "${GREEN}Checking convention...\n"; \
         printf '%.0s-' $(seq 1 50); \
         printf "${NO_COLOR}\n";
