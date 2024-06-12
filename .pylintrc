@@ -9,4 +9,4 @@ signature-mutators=click.decorators.option,
                    click.decorators.help_option,
                    click.decorators.pass_context,
                    click.decorators.confirmation_option
-ignored-modules=pyarrow,boto3,botocore,aiofiles,aiohttp,git,datahub,requests
+# ignored-modules=pyarrow,boto3,botocore
