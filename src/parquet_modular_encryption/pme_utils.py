@@ -30,7 +30,7 @@ def connect_to_hdfs(host: str, port: int, extra_conf: dict) -> HadoopFileSystem:
     ) as process:
         stdout, stderr = process.communicate()
         if stderr:
-            raise RuntimeError("Failed to acquire PME_TOKEN")
+            raise RuntimeError("Failed to get libhdfs path")
         libhdfsso_path = stdout.decode("utf-8").rstrip()
         os.environ["ARROW_LIBHDFS_DIR"] = os.path.dirname(libhdfsso_path)
     # Export CLASSPATH var
@@ -43,7 +43,7 @@ def connect_to_hdfs(host: str, port: int, extra_conf: dict) -> HadoopFileSystem:
     ) as process:
         stdout, stderr = process.communicate()
         if stderr:
-            raise RuntimeError("Failed to acquire PME_TOKEN")
+            raise RuntimeError("Failed to get hdfs classpath")
         hadoop_cp = stdout.decode("utf-8").rstrip()
         os.environ["ARROW_LIBHDFS_DIR"] = os.path.dirname(libhdfsso_path)
         if "CLASSPATH" in os.environ:
