@@ -20,7 +20,7 @@ class AwsKmsClient(pe.KmsClient):
         self.kms_client = boto3.client(
             "kms",
             config=config,
-            region_name=kms_connection_config.custom_kms_conf["region_name"],
+            region_name=kms_connection_config.custom_kms_conf["proxies_https"],
             aws_access_key_id=kms_connection_config.custom_kms_conf["aws_access_key_id"],
             aws_secret_access_key=kms_connection_config.custom_kms_conf["aws_secret_access_key"],
         )
