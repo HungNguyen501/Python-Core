@@ -1,10 +1,6 @@
-acryl-datahub~=0.13.2.4
-aiofiles
-aiohttp~=3.8.6
 asynctest
 fastapi~=0.111.0
 flake8
-GitPython~=3.1.43
 pylint
 pytest
 pytest-asyncio
