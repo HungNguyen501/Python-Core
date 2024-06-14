@@ -10,17 +10,25 @@ PYTHON='python3.11'
 validate_ref_name () {
     ref_type=${1}
     ref_name=${2}
-    if [ "${ref_type}" == "tag" ] ||
-        { 
-            [ "${ref_type}" == "branch" ] && 
-            [[ "${ref_name}" == "main"  || ${ref_name} == feature/* ]]
-        };
-    then
-        echo "Branch name is qualified: ${ref_name}"
-        exit 0
-    else
-        echo "Branch name is invalid: ${ref_name}. It should be started with [feature/]"
+    branch_pattern="^main$|^feature/.+$"
+    tag_pattern="^test-all-v[0-9]+$"
+    if [ "${ref_type}" == "branch" ]; then
+        if [[ "${ref_name}" =~ ${branch_pattern} ]]; then
+            printf "${GREEN}Branch name is qualified: ${ref_name}.${NO_COLOR}\n";
+            exit 0
+        fi
+        printf "${RED}Branch name is invalid: ${ref_name}. It should be main or started with [feature/*].${NO_COLOR}\n"
         exit 1
+    elif [ "${ref_type}" == "tag" ]; then
+        if [[ "${ref_name}" =~ ${tag_pattern} ]]; then
+            printf "${GREEN}Tag name is qualified: ${ref_name}.${NO_COLOR}\n"
+            exit 0
+        fi
+        printf "${RED}Tag name is invalid: ${ref_name}. It should be started with [test-all-v*].${NO_COLOR}\n"
+        exit 1
+    else
+        printf "${RED}ref_type is invalid: ${ref_type}. Valid values are [branch, tag].${NO_COLOR}\n"
+        exit 1 
     fi
 }
 run_all_tests () {
