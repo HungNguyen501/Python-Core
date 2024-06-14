@@ -17,7 +17,6 @@ check_ref_name:
 
 test_all:
 	@bash ./$(CiScript) run_all_tests
-	@bazel clean --async
 
 run_ci:
 	@bash ./$(CiScript) run_ci $(CHANGES)
