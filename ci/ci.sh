@@ -31,6 +31,37 @@ validate_ref_name () {
         exit 1 
     fi
 }
+check_pep8 () {
+    if [[ -z ${1} ]]; then
+        printf "${BLUE}Please input LOCATION for checking.${NO_COLOR}\n";
+        return 0
+    fi
+    printf "${GREEN}Checking PEP8 convention in ${1}...\n"
+    printf '%.0s-' $(seq 1 50)
+    printf "${NO_COLOR}\n"
+    ${PYTHON} -m flake8 ${1} --show-source --statistics && ${PYTHON} -m pylint ${1}
+    if [ $? != 0 ]; then
+        exit 1
+    fi
+}
+run_unit_tests () {
+    if [[ -z ${1} ]]; then
+        printf "${BLUE}Please input LOCATION for testing.${NO_COLOR}\n";
+        return 0
+    fi
+    printf "${GREEN}Running unit tests in ${1}...\n"
+    printf '%.0s-' $(seq 1 50)
+    printf "${NO_COLOR}\n"
+    ${PYTHON} -m pytest ${1} \
+        --disable-warnings \
+        -vv \
+        --cov ${1} \
+        --cov-report term-missing \
+        --cov-fail-under=100
+    if [ $? != 0 ]; then
+        exit 1
+    fi
+}
 run_all_tests () {
     make install
     check_pep8 src/
@@ -49,29 +80,11 @@ run_ci () {
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" 2>/dev/null)
     if [[ ! -z ${modules} ]]; then
         make install
-        printf "${GREEN}Checking PEP8 convention...\n";
-        printf '%.0s-' $(seq 1 50);
-        printf "${NO_COLOR}\n";
-        printf "${modules}\n"
-        ${PYTHON} -m flake8 ${modules} --show-source --statistics && ${PYTHON} -m pylint ${modules}
-        if [ $? != 0 ]; then
-            exit 1
-        fi
+        check_pep8 ${modules}
         tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))" 2>/dev/null)
         if [[ ! -z ${tests} ]]; then
-            printf "${GREEN}Running tests...\n"; \
-            printf '%.0s-' $(seq 1 50); \
-            printf "${NO_COLOR}\n";
             for test in ${tests[@]}; do
-                ${PYTHON} -m pytest ${test} \
-                    --disable-warnings \
-                    -vv \
-                    --cov ${test} \
-                    --cov-report term-missing \
-                    --cov-fail-under=100
-                if [ $? != 0 ]; then
-                    exit 1
-                fi
+                run_unit_tests ${test}
             done
         else
             printf "${BLUE}No tests found\n"; \
@@ -82,24 +95,6 @@ run_ci () {
         printf "${BLUE}Changes take no effect\n"; \
         printf '%.0s-' $(seq 1 50); \
         printf "${NO_COLOR}\n";
-    fi
-}
-check_pep8 () {
-    printf "${GREEN}Checking PEP8 convention in ${1}...\n"
-    printf '%.0s-' $(seq 1 50)
-    printf "${NO_COLOR}\n"
-    ${PYTHON} -m flake8 ${1} --show-source --statistics && ${PYTHON} -m pylint ${1}
-    if [ $? != 0 ]; then
-        exit 1
-    fi
-}
-run_unit_tests () {
-    printf "${GREEN}Running unit tests in ${1}...\n"
-    printf '%.0s-' $(seq 1 50)
-    printf "${NO_COLOR}\n"
-    ${PYTHON} -m pytest ${1} -vv --cov ${1} --cov-report term-missing --cov-fail-under=100
-    if [ $? != 0 ]; then
-        exit 1
     fi
 }
 # Execute function
