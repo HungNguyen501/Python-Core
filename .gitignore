@@ -37,7 +37,6 @@ eclipse-*bin/
 # User-specific .bazelrc
 user.bazelrc
 
-src/web_crawler/data/gold_prices/*.csv
 src/parquet_modular_encryption/data/*.parquet
 
 .idea/
