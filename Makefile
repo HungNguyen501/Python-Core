@@ -23,4 +23,10 @@ run_ci:
 	@bazel clean --async
 
 build_pool_api:
-	@docker-compose up -d pool_api
+	@docker compose up -d pool_api
+
+.DEFAULT_GOAL := help
+.PHONY: help
+all: help
+help: Makefile
+	@echo "Hello World!"

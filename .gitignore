@@ -1,5 +1,6 @@
 # Ignore sweetviz reports
 src/eda_sample/*.html
+MODULE.bazel.lock
 
 # Ignore backup files.
 *~
