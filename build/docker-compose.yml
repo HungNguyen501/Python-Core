@@ -5,7 +5,7 @@ services:
     image: pool_api
     container_name: pool_api
     build:
-      context: .
+      context: ../
       dockerfile: src/pool_api/Dockerfile
     command: uvicorn api.pool_api:app --host 0.0.0.0 --port 8000 --workers 1
     ports:

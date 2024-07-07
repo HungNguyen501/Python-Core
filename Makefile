@@ -23,7 +23,7 @@ run_ci:
 	@bazel clean --async
 
 build_pool_api:
-	@docker compose up -d pool_api
+	@docker compose -f build/docker-compose.yml up -d pool_api
 
 .DEFAULT_GOAL := help
 .PHONY: help
