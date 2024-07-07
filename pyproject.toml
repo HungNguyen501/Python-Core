@@ -39,6 +39,9 @@ signature-mutators = [
 # https://coverage.readthedocs.io/en/latest/config.html
 [tool.coverage.run]
 branch = true
+omit = [
+    "src/calculate_statistics/*",
+]
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
