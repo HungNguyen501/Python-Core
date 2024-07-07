@@ -1,5 +1,6 @@
 Python-Core
 ===
+
 ![Python badge](https://badgen.net/pypi/python/black)
 ![Test badge](https://github.com/python/cpython/actions/workflows/build.yml/badge.svg?branch=main&event=push)
 
@@ -13,7 +14,7 @@ The personal project is written mainly by Python. Also, the project uses ***GitH
 - Unit Tests - Code coverage 100%.
 
 # Development guides
-**Prerequisites:**
+**Prerequisites:**<br>
 - Bazel
 ```bash
 $ bazel --version
