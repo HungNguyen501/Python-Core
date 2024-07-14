@@ -25,6 +25,9 @@ run_ci:
 build_pool_api:
 	@docker compose -f build/docker-compose.yml up -d pool_api
 
+build_postgres_db:
+	@docker compose -f build/docker-compose.yml up -d postgres_db
+
 .DEFAULT_GOAL := help
 .PHONY: help
 all: help
