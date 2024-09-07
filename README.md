@@ -7,14 +7,14 @@ Python-Core
 Copyright (C) 2024 @github.com:HungNguyen501.<br>
 All rights reserved.<br>
 
-# Short description
+## Short description
 The personal project is written mainly by Python. Also, the project uses ***GitHub Action*** and ***Bazel (incremental build model)*** for CI flow that qualifies the following criteria:
 - Branch/ Tag naming convention.
 - PEP8 coding style.
 - Unit Tests - Code coverage 100%.
 
-# Development guides
-**Prerequisites:**<br>
+## Development guides
+### Prerequisites
 - Bazel
 ```bash
 $ bazel --version
@@ -27,3 +27,4 @@ Python 3.11.9
 $ python3.11 -m pip --version
 pip 24.0
 ```
+- Githooks: run `make githook` to add the script to pre-commit in githooks.
