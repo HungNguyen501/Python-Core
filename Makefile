@@ -1,5 +1,9 @@
 ProjectName := Python-Core
 CiScript := ci/ci.sh
+GithookScript := ci/githooks.sh
+
+githook:
+	@bash ./$(GithookScript) create_pre_commit_file
 
 install:
 	@python3.11 --version
