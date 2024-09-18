@@ -1,0 +1,10 @@
+school_id,state_code,subjects
+sch_1,!@sc_3,english maths chemistry
+sch_2,))sc_5,english physics chemistry
+sch_3,!@sc_8,maths biology
+sch_4,sc_11)_,hindi maths accounts
+sch_5,sc_11#@,english maths literature
+sch_6,sc_13#@,biology maths literature computer
+sch_7,sc_3#@,environmental_studies maths literature
+sch_8,sc_7#@,economics accounts literature
+sch_9,sc_8#@,social_studies accounts literature biology physics chemistry
