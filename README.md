@@ -20,11 +20,11 @@ The personal project is written mainly by Python. Also, the project uses ***GitH
 $ bazel --version
 bazel 7.2.1
 ```
-- Python 3.11
+- Python 3.12
 ```bash
-$ python3.11 --version
-Python 3.11.9
-$ python3.11 -m pip --version
-pip 24.0
+$ python3.12 --version
+Python 3.12.7
+$ python3.12 -m pip --version
+pip 24.2
 ```
 - Githooks: run `make githook` to add the script to pre-commit in githooks.

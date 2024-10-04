@@ -5,7 +5,7 @@ GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 NO_COLOR="\033[0m"
 
-PYTHON='python3.11'
+PYTHON='python3.12'
 
 validate_ref_name () {
     ref_type=${1}
