@@ -1,12 +1,12 @@
 py_binary(
-    name = "pool_api",
-    srcs = ["api/pool_api.py"],
+    name = "pool_service",
+    srcs = ["pool_service.py"],
     visibility = ["//visibility:public"],
 )
 
 py_test(
-    name = "test_pool_api",
-    srcs = ["api/tests/test_pool_api.py"],
+    name = "test_pool_service",
+    srcs = ["tests/test_pool_service.py"],
     timeout = "short",
     args = [
         "-vv",
@@ -17,6 +17,6 @@ py_test(
         "yourit",
     ],
     deps = [
-        "//src/pool_api:pool_api",
+        "//src/pool_api/services:pool_service",
     ],
 )

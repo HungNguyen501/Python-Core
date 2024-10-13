@@ -1,7 +1,7 @@
 ProjectName := Python-Core
 CiScript := ci/ci.sh
 GithookScript := ci/githooks.sh
-PythonVersion := python3.12
+PythonVersion := python3
 
 githook:
 	@bash ./$(GithookScript) create_pre_commit_file
@@ -23,8 +23,8 @@ check_ref_name:
 test_all:
 	@bash ./$(CiScript) run_all_tests
 
-run_ci:
-	@bash ./$(CiScript) run_ci $(CHANGES)
+verify_changes:
+	@bash ./$(CiScript) verify_changes $(CHANGES)
 	@bazel clean --async
 
 build_pool_api:

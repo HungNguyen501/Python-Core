@@ -5,7 +5,7 @@ GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 NO_COLOR="\033[0m"
 
-PYTHON='python3.12'
+PYTHON='python3'
 
 validate_ref_name () {
     ref_type=${1}
@@ -36,8 +36,9 @@ check_pep8 () {
         printf "${BLUE}Please input LOCATION for checking.${NO_COLOR}\n";
         return 0
     fi
-    printf "${GREEN}Checking PEP8 convention in ${1}...\n"
-    printf '%.0s-' $(seq 1 50)
+    intro="Checking PEP8 convention in ${1}..."
+    printf "${GREEN}${intro}\n"
+    printf '%.0s-' $(seq 1 ${#intro})
     printf "${NO_COLOR}\n"
     ${PYTHON} -m flake8 ${1} --show-source --statistics && ${PYTHON} -m pylint ${1}
     if [ $? != 0 ]; then
@@ -49,8 +50,9 @@ run_unit_tests () {
         printf "${BLUE}Please input LOCATION for testing.${NO_COLOR}\n";
         return 0
     fi
-    printf "${GREEN}Running unit tests in ${1}...\n"
-    printf '%.0s-' $(seq 1 50)
+    intro="Running tests in ${1}..."
+    printf "${GREEN}${intro}\n"
+    printf '%.0s-' $(seq 1 ${#intro})
     printf "${NO_COLOR}\n"
     ${PYTHON} -m pytest ${1} \
         --disable-warnings \
@@ -67,13 +69,14 @@ run_all_tests () {
     check_pep8 src/
     run_unit_tests src/
 }
-run_ci () {
+verify_changes () {
     if [[ -z ${1} ]]; then
         printf "${BLUE}Input(CHANGES) is empty.${NO_COLOR}\n";
         return 0
     fi
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
+    echo $changed_files
     for file_name in ${changed_files[@]}; do
         files+=("$(bazel query --keep_going --noshow_progress "${file_name}" 2>/dev/null) ")
     done
@@ -87,15 +90,22 @@ run_ci () {
                 run_unit_tests ${test}
             done
         else
-            printf "${BLUE}No tests found\n"; \
-            printf '%.0s-' $(seq 1 50); \
+            intro="No test found."
+            printf "${BLUE}${intro}\n"; \
+            printf '%.0s-' $(seq 1 ${#intro}); \
             printf "${NO_COLOR}\n";
         fi
     else
-        printf "${BLUE}Changes take no effect\n"; \
-        printf '%.0s-' $(seq 1 50); \
+        intro="Changes take no effect."
+        printf "${BLUE}${intro}\n"; \
+        printf '%.0s-' $(seq 1 ${#intro}); \
         printf "${NO_COLOR}\n";
     fi
+}
+test_pool_api () {
+    set -e
+    make build_pool_api
+    run_unit_tests src/pool_api/integration_tests
 }
 # Execute function
 $*

@@ -36,13 +36,13 @@ jobs:
       with:
         python-version: "3.12"
 
-    - name: Run CI
-      id: run-ci
+    - name: Verify changes
+      id: verify-changes
       run: |
         pattern="^test-all-v.*"
         if [ "${{ github.ref_type }}" == "tag" ] && [[ "${{ github.ref_name }}" =~ ${pattern} ]];
         then
           make test_all
         else
-          make run_ci CHANGES=${{ steps.changed-files.outputs.all }}
+          make verify_changes CHANGES=${{ steps.changed-files.outputs.all }}
         fi

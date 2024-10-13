@@ -5,7 +5,7 @@ services:
     build:
       context: ../
       dockerfile: src/pool_api/Dockerfile
-    command: uvicorn api.pool_api:app --host 0.0.0.0 --port 8000 --workers 1
+    command: uvicorn src.pool_api.api.application:get_app --host 0.0.0.0 --port 8000 --workers 1
     ports:
       - target: 8000
         host_ip: 127.0.0.1

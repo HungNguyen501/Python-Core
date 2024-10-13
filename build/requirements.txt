@@ -4,6 +4,7 @@ aiohttp~=3.10.8
 asynctest
 boto3~=1.34.102
 GitPython~=3.1.43
+httpx~=0.27.2
 numpy
 pandas
 pillow
