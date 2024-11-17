@@ -15,9 +15,9 @@ services:
     networks:
       - python_core
   
-  postgres_for_python_api:
+  postgres_db:
     image: postgres
-    container_name: postgres_for_python_api
+    container_name: postgres_db
     restart: always
     environment:
       POSTGRES_USER: local
@@ -37,9 +37,9 @@ services:
     networks:
       - python_core
 
-  redis_for_python_api:
+  redis:
     image: redis
-    container_name: redis_for_python_api
+    container_name: redis
     restart: always
     networks:
       - python_core

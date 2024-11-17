@@ -60,6 +60,7 @@ exclude_also = [
 
     # Don't complain about abstract methods, they aren't run:
     "@(abc\\.)?abstractmethod",
+    "Only run tests when enabling integration_tests"
     ]
 
 ignore_errors = true

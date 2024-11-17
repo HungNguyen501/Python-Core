@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-BLUE="\033[0;34m"
-NO_COLOR="\033[0m"
+PYTHON='python3.12'
+[[ -z "${ENVIRONMENT}" ]] && ENVIRONMENT="local" || ENVIRONMENT=${ENVIRONMENT}
 
-PYTHON='python3'
-
+install () {
+    ALLOWED_ENVS=("dev" "prod")
+    if [[ " ${ALLOWED_ENVS[*]} " =~ " ${ENVIRONMENT} " ]]; then
+        ${PYTHON} --version
+        echo "Installing..."
+        ${PYTHON} -m pip install --upgrade pip --break-system-packages --quiet
+        ${PYTHON} -m pip install -r ./ci/requirements.txt --break-system-packages --quiet
+    fi
+}
 validate_ref_name () {
     ref_type=${1}
     ref_name=${2}
@@ -14,32 +19,29 @@ validate_ref_name () {
     tag_pattern="^test-all-v[0-9]+$"
     if [ "${ref_type}" == "branch" ]; then
         if [[ "${ref_name}" =~ ${branch_pattern} ]]; then
-            printf "${GREEN}Branch name is qualified: ${ref_name}.${NO_COLOR}\n";
+            printf "Branch name is qualified: ${ref_name}.\n";
             exit 0
         fi
-        printf "${RED}Branch name is invalid: ${ref_name}. It should be main or started with [feature/*].${NO_COLOR}\n"
+        printf "Branch name is invalid: ${ref_name}. It should be main or started with [feature/*].\n"
         exit 1
     elif [ "${ref_type}" == "tag" ]; then
         if [[ "${ref_name}" =~ ${tag_pattern} ]]; then
-            printf "${GREEN}Tag name is qualified: ${ref_name}.${NO_COLOR}\n"
+            printf "Tag name is qualified: ${ref_name}.\n"
             exit 0
         fi
-        printf "${RED}Tag name is invalid: ${ref_name}. It should be started with [test-all-v*].${NO_COLOR}\n"
+        printf "Tag name is invalid: ${ref_name}. It should be started with [test-all-v*].\n"
         exit 1
     else
-        printf "${RED}ref_type is invalid: ${ref_type}. Valid values are [branch, tag].${NO_COLOR}\n"
+        printf "ref_type is invalid: ${ref_type}. Valid values are [branch, tag].\n"
         exit 1 
     fi
 }
 check_pep8 () {
     if [[ -z ${1} ]]; then
-        printf "${BLUE}Please input LOCATION for checking.${NO_COLOR}\n";
+        printf "Please input LOCATION for checking.\n";
         return 0
     fi
-    intro="Checking PEP8 convention in ${1}..."
-    printf "${GREEN}${intro}\n"
-    printf '%.0s-' $(seq 1 ${#intro})
-    printf "${NO_COLOR}\n"
+    printf "[Checking PEP8 convention in ${1}...]\n"
     ${PYTHON} -m flake8 ${1} --show-source --statistics && ${PYTHON} -m pylint ${1}
     if [ $? != 0 ]; then
         exit 1
@@ -47,13 +49,10 @@ check_pep8 () {
 }
 run_unit_tests () {
     if [[ -z ${1} ]]; then
-        printf "${BLUE}Please input LOCATION for testing.${NO_COLOR}\n";
+        printf "Please input LOCATION for testing.\n";
         return 0
     fi
-    intro="Running tests in ${1}..."
-    printf "${GREEN}${intro}\n"
-    printf '%.0s-' $(seq 1 ${#intro})
-    printf "${NO_COLOR}\n"
+    printf "[Running tests in ${1}...]\n"
     ${PYTHON} -m pytest ${1} \
         --disable-warnings \
         -vv \
@@ -64,25 +63,19 @@ run_unit_tests () {
         exit 1
     fi
 }
-run_all_tests () {
-    make install
-    check_pep8 src/
-    run_unit_tests src/
-}
 verify_changes () {
     if [[ -z ${1} ]]; then
-        printf "${BLUE}Input(CHANGES) is empty.${NO_COLOR}\n";
+        printf "Input(CHANGES) is empty.\n";
         return 0
     fi
     files=()
     IFS=',' read -r -a changed_files <<< "${1}"
-    echo $changed_files
     for file_name in ${changed_files[@]}; do
         files+=("$(bazel query --keep_going --noshow_progress "${file_name}" 2>/dev/null) ")
     done
     modules=$(bazel query --noshow_progress --output package "set(${files[*]})" 2>/dev/null)
     if [[ ! -z ${modules} ]]; then
-        make install
+        install
         check_pep8 ${modules}
         tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))" 2>/dev/null)
         if [[ ! -z ${tests} ]]; then
@@ -90,22 +83,34 @@ verify_changes () {
                 run_unit_tests ${test}
             done
         else
-            intro="No test found."
-            printf "${BLUE}${intro}\n"; \
-            printf '%.0s-' $(seq 1 ${#intro}); \
-            printf "${NO_COLOR}\n";
+            printf "No test found.\n"
         fi
     else
-        intro="Changes take no effect."
-        printf "${BLUE}${intro}\n"; \
-        printf '%.0s-' $(seq 1 ${#intro}); \
-        printf "${NO_COLOR}\n";
+        printf "Changes take no effect.\n"
     fi
 }
-test_pool_api () {
+run_all_tests () {
+    install
+    check_pep8 src/
+    run_unit_tests src/
+}
+test_integration () {
+    if [[ -z ${1} ]]; then
+        printf "Input(SERVICE) is empty.\n";
+        return 0
+    fi
     set -e
-    make build_pool_api
-    run_unit_tests src/pool_api/integration_tests
+    export INTEGRATION_TEST="ENABLE"
+    case "${1}" in
+        "pool_api")
+            docker compose -f build/docker-compose.yml up -d pool_api
+            run_unit_tests src/pool_api/integration_tests
+            docker container stop pool_api
+            ;;
+        *)
+            echo "Service not found!"
+            ;;
+    esac
 }
 # Execute function
 $*
