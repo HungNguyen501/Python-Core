@@ -3,6 +3,7 @@ aiofiles
 aiohttp~=3.10.8
 asynctest
 boto3~=1.34.102
+Faker~=33.0.0
 fastapi~=0.111.0
 flake8
 flake8-pyproject

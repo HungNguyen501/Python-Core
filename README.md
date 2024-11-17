@@ -27,5 +27,7 @@ Python 3.12.7
 $ python3.12 -m pip --version
 pip 24.2
 ```
-- Githooks: run `make githook` to add the script to pre-commit in githooks.
-- Install libs: `make install`
+- Init project: install libs and add githook
+```bash
+$ make init
+```

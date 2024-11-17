@@ -3,10 +3,8 @@ CiScript := ci/ci.sh
 GithookScript := ci/githooks.sh
 PythonVersion := python3.12
 
-githook:
+init:
 	@bash ./$(GithookScript) create_pre_commit_file
-
-install:
 	@$(PythonVersion) --version
 	@$(PythonVersion) -m pip install --upgrade pip --break-system-packages
 	@$(PythonVersion) -m pip install -r ./ci/requirements.txt --break-system-packages
