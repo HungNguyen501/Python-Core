@@ -38,7 +38,7 @@ def test_upsert_pool(client):
         }
     )
     assert append_resp.status_code == 200
-    assert append_resp.text == '{"status":"appended"}'
+    assert append_resp.text == '{"pool_id": {pool_id}, "status":"appended"}'.format(pool_id=random_pool_id)
 
 
 @pytest.mark.skipif(not os.getenv("INTEGRATION_TEST"), reason="Only run tests when enabling integration_tests")
