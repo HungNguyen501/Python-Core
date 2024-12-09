@@ -29,7 +29,7 @@ def test_upsert_pool(client):
         }
     )
     assert insert_resp.status_code == 200
-    assert insert_resp.json() == {"pool_id": random_pool_id, "status":"inserted"}
+    assert insert_resp.json() == {"pool_id": random_pool_id, "status": "inserted"}
     append_resp = client.post(
         url="http://localhost:8501/api/pool/upsert",
         json={
@@ -38,7 +38,7 @@ def test_upsert_pool(client):
         }
     )
     assert append_resp.status_code == 200
-    assert append_resp.json() == {"pool_id": random_pool_id, "status":"appended"}
+    assert append_resp.json() == {"pool_id": random_pool_id, "status": "appended"}
 
 
 @pytest.mark.skipif(not os.getenv("INTEGRATION_TEST"), reason="Only run tests when enabling integration_tests")
