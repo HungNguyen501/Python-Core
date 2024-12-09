@@ -12,30 +12,6 @@ install () {
         ${PYTHON} -m pip install -r ./ci/requirements.txt --break-system-packages --quiet
     fi
 }
-validate_ref_name () {
-    ref_type=${1}
-    ref_name=${2}
-    branch_pattern="^main$|^feature/.+$"
-    tag_pattern="^test-all-v[0-9]+$"
-    if [ "${ref_type}" == "branch" ]; then
-        if [[ "${ref_name}" =~ ${branch_pattern} ]]; then
-            printf "Branch name is qualified: ${ref_name}.\n";
-            exit 0
-        fi
-        printf "Branch name is invalid: ${ref_name}. It should be main or started with [feature/*].\n"
-        exit 1
-    elif [ "${ref_type}" == "tag" ]; then
-        if [[ "${ref_name}" =~ ${tag_pattern} ]]; then
-            printf "Tag name is qualified: ${ref_name}.\n"
-            exit 0
-        fi
-        printf "Tag name is invalid: ${ref_name}. It should be started with [test-all-v*].\n"
-        exit 1
-    else
-        printf "ref_type is invalid: ${ref_type}. Valid values are [branch, tag].\n"
-        exit 1 
-    fi
-}
 check_pep8 () {
     if [[ -z ${1} ]]; then
         printf "Please input LOCATION for checking.\n";

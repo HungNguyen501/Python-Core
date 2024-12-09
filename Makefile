@@ -16,9 +16,6 @@ test:
 pep8:
 	@bash ./$(CiScript) check_pep8 $(LOCATION)
 
-check_ref_name:
-	@bash ./$(CiScript) validate_ref_name $(REF_TYPE) $(REF_NAME)
-
 verify_changes:
 	@bash ./$(CiScript) verify_changes $(CHANGES)
 	@bazel clean --async

@@ -1,0 +1,33 @@
+name: Test-all
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ENVIRONMENT: dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.12"
+        cache: "pip"
+
+    - name: Test all
+      id: test-all
+      run: |
+        make test_all
+    
+    - name: Integration tests
+      id: integration-tests
+      run: |
+        make test_integration SERVICE=pool_api
