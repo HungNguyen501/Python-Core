@@ -29,7 +29,7 @@ def test_upsert_pool(client):
         }
     )
     assert insert_resp.status_code == 200
-    assert insert_resp.text == '{"pool_id": {pool_id}, "status":"inserted"}'.format(pool_id=random_pool_id)
+    assert insert_resp.json() == {"pool_id": random_pool_id, "status":"inserted"}
     append_resp = client.post(
         url="http://localhost:8501/api/pool/upsert",
         json={
@@ -38,7 +38,7 @@ def test_upsert_pool(client):
         }
     )
     assert append_resp.status_code == 200
-    assert append_resp.text == '{"pool_id": {pool_id}, "status":"appended"}'.format(pool_id=random_pool_id)
+    assert append_resp.json() == {"pool_id": random_pool_id, "status":"appended"}
 
 
 @pytest.mark.skipif(not os.getenv("INTEGRATION_TEST"), reason="Only run tests when enabling integration_tests")
@@ -63,7 +63,7 @@ def test_get_statistics(client):
         }
     )
     assert insert_resp.status_code == 200
-    assert insert_resp.text == '{"pool_id": {pool_id}, "status":"inserted"}'.format(pool_id=random_pool_id)
+    assert insert_resp.json() == {"pool_id": random_pool_id, "status": "inserted"}
 
     statistics_resp = client.post(
         url="http://localhost:8501/api/pool/statistics",
@@ -73,4 +73,4 @@ def test_get_statistics(client):
         }
     )
     assert statistics_resp.status_code == 200
-    assert statistics_resp.json() == {'quantile_value': 5, 'total_count': 10}
+    assert statistics_resp.json() == {'pool_id': random_pool_id, 'quantile_value': 5, 'total_count': 10}
