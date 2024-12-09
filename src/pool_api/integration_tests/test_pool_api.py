@@ -29,7 +29,7 @@ def test_upsert_pool(client):
         }
     )
     assert insert_resp.status_code == 200
-    assert insert_resp.text == '{"status":"inserted"}'
+    assert insert_resp.text == '{"pool_id": {pool_id}, "status":"inserted"}'.format(pool_id=random_pool_id)
     append_resp = client.post(
         url="http://localhost:8501/api/pool/upsert",
         json={
@@ -63,7 +63,7 @@ def test_get_statistics(client):
         }
     )
     assert insert_resp.status_code == 200
-    assert insert_resp.text == '{"status":"inserted"}'
+    assert insert_resp.text == '{"pool_id": {pool_id}, "status":"inserted"}'.format(pool_id=random_pool_id)
 
     statistics_resp = client.post(
         url="http://localhost:8501/api/pool/statistics",
