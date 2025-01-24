@@ -63,6 +63,8 @@ verify_changes () {
         fi
     else
         printf "Changes take no effect.\n"
+        # Create empty path to avoid Error: Cache folder path is retrieved for pip but doesn't exist on disk: /home/runner/.cache/pip
+        mkdir -p ~/.cache/pip
     fi
 }
 run_all_tests () {
