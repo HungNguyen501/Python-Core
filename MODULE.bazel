@@ -4,3 +4,21 @@
 #
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
+
+bazel_dep(name = "rules_python", version="1.1.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+
+python.toolchain(python_version = "3.12", is_default = True)
+
+use_repo(python, "python_3_12", "python_3_12_host")
+
+# pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+
+# pip.parse(
+#     hub_name = "my_pip",
+#     python_version = "3.12",
+#     requirements_lock = "//build:requirements.txt",
+# )
+
+# use_repo(pip, "my_pip")
