@@ -1,34 +1,37 @@
 #!/usr/bin/env bash
 
 PYTHON='python3.12'
+
 [[ -z "${ENVIRONMENT}" ]] && ENVIRONMENT="local" || ENVIRONMENT=${ENVIRONMENT}
 
-install () {
+install_deps () {
     ALLOWED_ENVS=("dev" "prod")
     if [[ " ${ALLOWED_ENVS[*]} " =~ " ${ENVIRONMENT} " ]]; then
         ${PYTHON} --version
-        echo "Installing..."
+        echo ">> Installing..."
         ${PYTHON} -m pip install --upgrade pip --break-system-packages --quiet
-        ${PYTHON} -m pip install -r ./ci/requirements.txt --break-system-packages --quiet
+        ${PYTHON} -m pip install -r ./scripts/ci/requirements.txt --break-system-packages --quiet
     fi
 }
-check_pep8 () {
+
+pep8 () {
     if [[ -z ${1} ]]; then
-        printf "Please input LOCATION for checking.\n";
+        printf "Input(LOCATION) is empty.\n";
         return 0
     fi
-    printf "[Checking PEP8 convention in ${1}...]\n"
+    echo ">> Checking PEP8 at ${1}"
     ${PYTHON} -m flake8 ${1} --show-source --statistics && ${PYTHON} -m pylint ${1}
     if [ $? != 0 ]; then
         exit 1
     fi
 }
-run_unit_tests () {
+
+run_tests () {
     if [[ -z ${1} ]]; then
-        printf "Please input LOCATION for testing.\n";
+        printf "Input(LOCATION) is empty.\n";
         return 0
     fi
-    printf "[Running tests in ${1}...]\n"
+    echo ">> Running tests at ${1}"
     ${PYTHON} -m pytest ${1} \
         --disable-warnings \
         -vv \
@@ -39,50 +42,47 @@ run_unit_tests () {
         exit 1
     fi
 }
+
 verify_changes () {
     if [[ -z ${1} ]]; then
         printf "Input(CHANGES) is empty.\n";
         return 0
     fi
     files=()
-    IFS=',' read -r -a changed_files <<< "${1}"
-    for file_name in ${changed_files[@]}; do
-        files+=("$(bazel query --keep_going --noshow_progress "${file_name}" 2>/dev/null) ")
+    IFS=',' read -r -a input_files <<< "${1}"
+    for file in ${input_files[@]}; do
+        files+=("$(bazel query --keep_going --noshow_progress "${file}" 2>/dev/null) ")
     done
-    modules=$(bazel query --noshow_progress --output package "set(${files[*]})" 2>/dev/null)
-    if [[ ! -z ${modules} ]]; then
-        install
-        check_pep8 ${modules}
+    packages=$(bazel query --noshow_progress --output package "set(${files[*]})" 2>/dev/null)
+    if [[ ! -z ${packages} ]]; then
+        install_deps
+        pep8 ${packages}
         tests=$(bazel query --keep_going --noshow_progress --output package  "kind(test, rdeps(//..., set(${files[*]})))" 2>/dev/null)
         if [[ ! -z ${tests} ]]; then
             for test in ${tests[@]}; do
-                run_unit_tests ${test}
+                run_tests ${test}
             done
         else
-            printf "No test found.\n"
+            echo "No test found!"
         fi
     else
-        printf "Changes take no effect.\n"
+        echo "Changes take no effect!"
         # Create empty path to avoid Error: Cache folder path is retrieved for pip but doesn't exist on disk: /home/runner/.cache/pip
         mkdir -p ~/.cache/pip
     fi
 }
-run_all_tests () {
-    install
-    check_pep8 src/
-    run_unit_tests src/
-}
+
 test_integration () {
     if [[ -z ${1} ]]; then
-        printf "Input(SERVICE) is empty.\n";
+        echo "Input(SERVICE) is empty";
         return 0
     fi
     set -e
     export INTEGRATION_TEST="ENABLE"
     case "${1}" in
         "pool_api")
-            docker compose -f build/docker-compose.yml up -d pool_api
-            run_unit_tests src/pool_api/integration_tests
+            docker compose -f scripts/build/docker-compose.yml up -d pool_api
+            run_tests src/pool_api/integration_tests
             docker container stop pool_api
             ;;
         *)
@@ -90,5 +90,6 @@ test_integration () {
             ;;
     esac
 }
+
 # Execute function
 $*
