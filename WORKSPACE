@@ -23,7 +23,7 @@ load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
     name = "my_pip",
     python_interpreter_target = "@python_3_12_host//:python",
-    requirements_lock = "//build:requirements.txt",
+    requirements_lock = "//scripts/build:requirements.txt",
 )
 
 load("@my_pip//:requirements.bzl", "install_deps")
