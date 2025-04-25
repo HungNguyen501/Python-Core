@@ -25,7 +25,7 @@ jobs:
     - name: Test all
       id: test-all
       run: |
-        make test_all
+        make run_tests LOCATION=src
     
     - name: Integration tests
       id: integration-tests
