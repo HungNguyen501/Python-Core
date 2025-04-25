@@ -34,6 +34,7 @@ run_tests () {
     else
         location=${1}
     fi
+    install_deps
     echo ">> Running tests at ${location}"
     ${PYTHON} -m pytest ${location} \
         --disable-warnings \
