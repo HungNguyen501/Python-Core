@@ -41,6 +41,7 @@ signature-mutators = [
 branch = true
 omit = [
     "src/calculate_statistics/*",
+    "src/pool_api/api/tests/integration/*.py",
 ]
 
 [tool.coverage.report]

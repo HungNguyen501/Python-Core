@@ -18,6 +18,5 @@ py_test(
     ],
     deps = [
         "//src/common/calculate_quantile:calculate_quantile",
-        "//src/pool_api:pool_api",
     ],
 )
