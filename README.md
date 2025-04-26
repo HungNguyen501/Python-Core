@@ -9,12 +9,12 @@ All rights reserved.<br>
 
 ## Short description
 The personal project is written mainly by Python. Also, the project uses ***GitHub Action*** and ***Bazel (incremental build model)*** for CI flow that qualifies the following criteria:
-- Branch/ Tag naming convention.
 - PEP8 coding style.
-- Unit Tests - Code coverage 100%.
+- Unit Tests - Code coverage `100%`.
 
 ## Development guides
 ### Prerequisites
+- [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 - Bazel
 ```bash
 $ bazel --version
@@ -24,8 +24,6 @@ bazel 7.2.1
 ```bash
 $ python3.12 --version
 Python 3.12.7
-$ python3.12 -m pip --version
-pip 24.2
 ```
 - Init project: install libs and add githook
 ```bash
