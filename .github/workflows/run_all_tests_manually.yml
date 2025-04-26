@@ -25,9 +25,9 @@ jobs:
     - name: Test all
       id: test-all
       run: |
-        make test LOCATION=src
+        make test path=src
     
     - name: Integration tests
       id: integration-tests
       run: |
-        make test_integration SERVICE=pool_api
+        make test_integration

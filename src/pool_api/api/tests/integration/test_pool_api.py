@@ -7,7 +7,7 @@ from faker import Faker
 fake = Faker()
 
 
-@pytest.mark.integration_tests_for_pool_api
+@pytest.mark.integration_tests
 @pytest.fixture(name="client", scope="session")
 def gen_client():
     """Generate mock_hdfs_tree_paths"""
@@ -15,7 +15,7 @@ def gen_client():
         yield client
 
 
-@pytest.mark.integration_tests_for_pool_api
+@pytest.mark.integration_tests
 def test_upsert_pool(client):
     """Test /upsert api"""
     random_pool_id = fake.random_number()
@@ -39,7 +39,7 @@ def test_upsert_pool(client):
     assert append_resp.json() == {"pool_id": random_pool_id, "status": "appended"}
 
 
-@pytest.mark.integration_tests_for_pool_api
+@pytest.mark.integration_tests
 def test_get_statistics(client):
     """Test /statistics api"""
     random_pool_id = fake.random_number()

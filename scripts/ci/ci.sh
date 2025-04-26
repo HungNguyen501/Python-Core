@@ -4,20 +4,20 @@ PYTHON='python3'
 
 [[ -z "${ENVIRONMENT}" ]] && ENVIRONMENT="local" || ENVIRONMENT=${ENVIRONMENT}
 
-install_deps () {
+function install_deps () {
     ALLOWED_ENVS=("dev" "prod")
     if [[ " ${ALLOWED_ENVS[*]} " =~ " ${ENVIRONMENT} " ]]; then
         ${PYTHON} --version
-        echo ">> Installing..."
+        echo ">> Installing dependencies..."
         ${PYTHON} -m pip install --upgrade pip --break-system-packages --quiet
         cat ./scripts/ci/requirements.txt
         ${PYTHON} -m pip install -r ./scripts/ci/requirements.txt --break-system-packages --quiet
     fi
 }
 
-pep8 () {
+function pep8 () {
     if [[ -z ${1} ]]; then
-        printf "Input(LOCATION) is empty.\n";
+        echo "Empty path!"
         return 0
     fi
     echo ">> Checking PEP8 at ${1}"
@@ -27,9 +27,9 @@ pep8 () {
     fi
 }
 
-run_tests () {
+function run_tests () {
     if [[ -z ${1} ]]; then
-        echo "Input(LOCATION) is empty."
+        echo "Empty path!"
         return 0
     else
         location=${1}
@@ -42,15 +42,15 @@ run_tests () {
         --cov ${location} \
         --cov-report term-missing \
         --cov-fail-under=100 \
-        -m "not integration_tests_for_pool_api"  # Exclude marked tests
+        -m "not integration_tests"  # Exclude marked tests
     if [ $? != 0 ]; then
         exit 1
     fi
 }
 
-verify_changes () {
+function verify_changes () {
     if [[ -z ${1} ]]; then
-        echo "Input(CHANGES) is empty."
+        echo "Empty changes!"
         return 0
     fi
     files=()
@@ -71,35 +71,21 @@ verify_changes () {
                 run_tests ${test}
             done
         else
-            echo "No test found."
+            echo "No test found!"
         fi
     else
-        echo "Changes take no effect."
+        echo "Changes take no effect!"
         # Create empty path to avoid Error: Cache folder path is retrieved for pip but doesn't exist on disk: /home/runner/.cache/pip
         mkdir -p ~/.cache/pip
     fi
 }
 
-test_integration () {
-    if [[ -z ${1} ]]; then
-        echo "Input(SERVICE) is empty";
-        return 0
-    else
-        service=${1}
-    fi
-    set -e
-    case "${service}" in
-        "pool_api")
-            docker compose -f docker-compose.yml up -d pool_api
-            ${PYTHON} -m pytest src/ \
-                --disable-warnings \
-                -vv \
-                -m integration_tests_for_pool_api
-            ;;
-        *)
-            echo "Service not found."
-            ;;
-    esac
+function test_integration () {
+    docker compose -f docker-compose.yml up -d pool_api
+    ${PYTHON} -m pytest src/ \
+        --disable-warnings \
+        -vv \
+        -m integration_tests
 }
 
 # Execute function

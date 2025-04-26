@@ -1,7 +1,7 @@
 ProjectName := Python-Core
 CiScript := scripts/ci/ci.sh
 GithookScript := scripts/ci/githooks.sh
-PythonVersion := python3.12
+PythonVersion := python3
 
 init:
 	@bash ./$(GithookScript) create_pre_commit_file
@@ -11,17 +11,17 @@ init:
 	@$(PythonVersion) -m pip install -r ./scripts/build/requirements.txt --break-system-packages
 
 test:
-	@bash ./$(CiScript) run_tests $(LOCATION)
+	@bash ./$(CiScript) run_tests $(path)
 
 pep8:
-	@bash ./$(CiScript) pep8 $(LOCATION)
+	@bash ./$(CiScript) pep8 $(path)
 
 verify_changes:
-	@bash ./$(CiScript) verify_changes $(CHANGES)
+	@bash ./$(CiScript) verify_changes $(paths)
 	@bazel clean --async
 
 test_integration:
-	@bash ./$(CiScript) test_integration $(SERVICE)
+	@bash ./$(CiScript) test_integration
 
 .DEFAULT_GOAL := help
 .PHONY: help

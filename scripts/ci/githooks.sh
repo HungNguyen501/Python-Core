@@ -8,7 +8,7 @@ echo \"changed_files=\${changed_files}\"
 make verify_changes CHANGES=\${changed_files}
 "
 
-create_pre_commit_file() {
+function create_pre_commit_file() {
     echo "${pre_commit_file_content}" > .git/hooks/pre-commit
     chmod +x .git/hooks/pre-commit
     git config --local core.hooksPath .git/hooks/
