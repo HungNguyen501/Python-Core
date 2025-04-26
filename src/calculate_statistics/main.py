@@ -6,7 +6,7 @@ import logging.config
 import os
 import time
 
-logging.config.fileConfig(fname="build/logging.cfg")
+logging.config.fileConfig(fname="configs/logging.cfg")
 logger = logging.getLogger(__name__)
 
 
