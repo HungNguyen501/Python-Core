@@ -2,7 +2,7 @@ acryl-datahub~=0.13.2.4
 aiofiles
 aiohttp~=3.10.8
 asynctest
-boto3~=1.34.102
+boto3~=1.38.3
 Faker~=33.0.0
 fastapi~=0.111.0
 flake8
