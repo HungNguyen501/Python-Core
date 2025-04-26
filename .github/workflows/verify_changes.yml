@@ -6,6 +6,10 @@ name: Verify-Changes
 on:
   push:
     branches: ["main", "feature/*"]
+    paths-ignore:
+      - '*.md'
+      - '.gitignore'
+      - '.dockerignore'
 
 permissions:
   contents: read

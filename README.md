@@ -25,7 +25,11 @@ bazel 7.2.1
 $ python3.12 --version
 Python 3.12.7
 ```
-- Init project: install libs and add githook
+- Init project:
 ```bash
+# Create python venv
+$ python3.12 -m venv .venv
+$ source .venv/bin/activate
+# Install dependencies and githook
 $ make init
 ```
