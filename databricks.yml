@@ -1,0 +1,19 @@
+# This is a Databricks asset bundle definition for Python-Core.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: Python-Core
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-1072468836148393.13.azuredatabricks.net
+
+  ## Optionally, there could be 'staging' or 'prod' targets here.
+  #
+  # prod:
+  #   workspace:
+  #     host: https://adb-1072468836148393.13.azuredatabricks.net

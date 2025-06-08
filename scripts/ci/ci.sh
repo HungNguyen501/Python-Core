@@ -10,7 +10,7 @@ function install_deps () {
         ${PYTHON} --version
         echo ">> Installing dependencies..."
         ${PYTHON} -m pip install --upgrade pip --break-system-packages --quiet
-        cat ./scripts/ci/requirements.txt
+        cat ./scripts/ci/requirements-ci.txt
         ${PYTHON} -m pip install -r ./scripts/ci/requirements.txt --break-system-packages --quiet
     fi
 }

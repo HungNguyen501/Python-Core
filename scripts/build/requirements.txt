@@ -9,6 +9,7 @@ numpy
 pandas
 pillow
 pyarrow~=16.0.0
+pyspark~=4.0.0
 seaborn
 sweetviz~=2.3.1
 tabulate

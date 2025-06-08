@@ -7,7 +7,7 @@ init:
 	@bash ./$(GithookScript) create_pre_commit_file
 	@$(PythonVersion) --version
 	@$(PythonVersion) -m pip install --upgrade pip --break-system-packages
-	@$(PythonVersion) -m pip install -r ./scripts/ci/requirements.txt --break-system-packages
+	@$(PythonVersion) -m pip install -r ./scripts/ci/requirements-ci.txt --break-system-packages
 	@$(PythonVersion) -m pip install -r ./scripts/build/requirements.txt --break-system-packages
 
 test:
