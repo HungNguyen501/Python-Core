@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: make-pre_commit_check
+        name: Run make pre_commit_check
+        entry: make pre_commit_check
+        language: system
+        pass_filenames: false
+        files: ./

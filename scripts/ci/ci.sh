@@ -80,6 +80,13 @@ function verify_changes () {
     fi
 }
 
+function pre_commit_check() {
+    changed_files=$(git diff --cached --name-only | awk 'ORS=","')
+    changed_files=${changed_files:0:-1}
+    echo "changed_files=${changed_files}"
+    verify_changes ${changed_files}
+}
+
 function test_integration () {
     docker compose -f docker-compose.yml up -d pool_api
     ${PYTHON} -m pytest src/ \

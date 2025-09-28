@@ -6,6 +6,7 @@ boto3~=1.38.3
 GitPython~=3.1.43
 httpx~=0.27.2
 numpy
+openai
 pandas
 pillow
 pyarrow~=16.0.0
